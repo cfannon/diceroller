@@ -1,6 +1,8 @@
 package com.example.diceroller
 
+import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.border
@@ -19,9 +21,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,6 +56,10 @@ class MainActivity : ComponentActivity() {
 fun DiceRollerApp(modifier: Modifier = Modifier) {
     Column (modifier.fillMaxHeight()) {
 
+        val context = LocalContext.current
+        val generator = TestNumberGenerator()
+        var rollResult by remember { mutableStateOf(0) }
+
         HeaderSection()
 
         Subtitle()
@@ -59,18 +70,20 @@ fun DiceRollerApp(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        PrimaryRollButton()
+        PrimaryRollButton{
+            rollResult = generator.rollDice(20)
+            Toast.makeText(context, "Roll Result : $rollResult", Toast.LENGTH_SHORT).show()
+        }
 
         Spacer(modifier = Modifier.height(100.dp))
 
-        ResultsSection()
+        ResultsSection(rollResult)
     }
 
 }
 
 @Composable
 fun HeaderSection() {
-    // App Title
     Row (
         Modifier
             .fillMaxWidth()
@@ -86,7 +99,6 @@ fun HeaderSection() {
 
 @Composable
 fun Subtitle() {
-    // Dice Selection Title
     Row (Modifier
         .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
@@ -224,7 +236,6 @@ fun DiceSelection() {
 
 @Composable
 fun ModifierButtons() {
-    // Number of Dice to Roll and Modifier
     Row(
         Modifier
             .fillMaxWidth(),
@@ -265,15 +276,14 @@ fun ModifierButtons() {
 }
 
 @Composable
-fun PrimaryRollButton() {
-    // Primary Action Button - "Roll"
+fun PrimaryRollButton(onClick: () -> Unit) {
     Row (
         Modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
         Button (
-            onClick = { /*TODO*/ },
+            onClick = onClick,
             shape = RectangleShape,
             modifier = Modifier
                 .height(50.dp)
@@ -289,8 +299,7 @@ fun PrimaryRollButton() {
 }
 
 @Composable
-fun ResultsSection() {
-    // Results
+fun ResultsSection(total: Int) {
     Row(
         Modifier
             .fillMaxWidth(),
@@ -303,7 +312,7 @@ fun ResultsSection() {
                 .padding(20.dp),
         ) {
             Row() {
-                Text(text = "Results: Total")
+                Text(text = "Results: $total")
             }
             Row() {
                 Text(text = "Results Breakdown")
