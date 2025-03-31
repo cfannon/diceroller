@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +17,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -59,19 +64,24 @@ fun DiceRollerApp(modifier: Modifier = Modifier) {
         val context = LocalContext.current
         val generator = TestNumberGenerator()
         var rollResult by remember { mutableStateOf(0) }
+        var diceValue by remember { mutableStateOf(0) }
+
 
         HeaderSection()
 
         Subtitle()
 
-        DiceSelection()
+        DiceSelection { selectedDiceValue ->
+            diceValue = selectedDiceValue
+            Toast.makeText(context, "Dice Selection : $selectedDiceValue", Toast.LENGTH_SHORT).show()
+        }
 
         ModifierButtons()
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        PrimaryRollButton{
-            rollResult = generator.rollDice(20)
+        PrimaryRollButton {
+            rollResult = generator.rollDice(diceValue)
             Toast.makeText(context, "Roll Result : $rollResult", Toast.LENGTH_SHORT).show()
         }
 
@@ -110,7 +120,7 @@ fun Subtitle() {
 }
 
 @Composable
-fun DiceSelection() {
+fun DiceSelection(onClick: (Int) -> Unit) {
     // Dice Selection Buttons - "d2", "d4", "d6", "d8"
     Row (
         Modifier
@@ -119,7 +129,7 @@ fun DiceSelection() {
         horizontalArrangement = Arrangement.Center
     ) {
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onClick(2) },
             shape = RectangleShape,
             modifier = Modifier
                 .height(70.dp)
@@ -133,7 +143,7 @@ fun DiceSelection() {
         Spacer(modifier = Modifier.width(10.dp))
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onClick(4) },
             shape = RectangleShape,
             modifier = Modifier
                 .height(70.dp)
@@ -147,7 +157,7 @@ fun DiceSelection() {
         Spacer(modifier = Modifier.width(10.dp))
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onClick(6) },
             shape = RectangleShape,
             modifier = Modifier
                 .height(70.dp)
@@ -161,7 +171,7 @@ fun DiceSelection() {
         Spacer(modifier = Modifier.width(10.dp))
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onClick(8) },
             shape = RectangleShape,
             modifier = Modifier
                 .height(70.dp)
@@ -181,7 +191,7 @@ fun DiceSelection() {
         horizontalArrangement = Arrangement.Center
     ) {
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onClick(10) },
             shape = RectangleShape,
             modifier = Modifier
                 .height(70.dp)
@@ -195,7 +205,7 @@ fun DiceSelection() {
         Spacer(modifier = Modifier.width(10.dp))
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onClick(12) },
             shape = RectangleShape,
             modifier = Modifier
                 .height(70.dp)
@@ -209,7 +219,7 @@ fun DiceSelection() {
         Spacer(modifier = Modifier.width(10.dp))
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onClick(20) },
             shape = RectangleShape,
             modifier = Modifier
                 .height(70.dp)
@@ -223,7 +233,7 @@ fun DiceSelection() {
         Spacer(modifier = Modifier.width(10.dp))
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onClick(100) },
             shape = RectangleShape,
             modifier = Modifier
                 .height(70.dp)
@@ -236,39 +246,111 @@ fun DiceSelection() {
 
 @Composable
 fun ModifierButtons() {
+    var diceQuantity by remember { mutableStateOf(1) }
+    var diceModifier by remember { mutableStateOf(0) }
+
     Row(
         Modifier
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.Center,
+
     ){
-        Text(
-            text = "-   1d   +",
-            Modifier
-                .width(125.dp)
+        Card(
+            shape = RectangleShape,
+            modifier = Modifier
                 .height(40.dp)
-                .border(5.dp, Color.Red, RectangleShape),
-            textAlign = TextAlign.Center
-        )
+                .width(125.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    onClick = { diceQuantity-- },
+                    shape = RectangleShape,
+                    modifier = Modifier
+                        .height(30.dp)
+                        .width(30.dp)
+                        .padding(2.dp),
+                ) {
+                    Text(text = "-")
+                }
+
+                Text(
+                    text = "${diceQuantity}d",
+                    Modifier
+                        .width(60.dp)
+                        .height(40.dp),
+                    textAlign = TextAlign.Center,
+                )
+
+                Button(
+                    onClick = { diceQuantity++ },
+                    shape = RectangleShape,
+                    modifier = Modifier
+                        .height(30.dp)
+                        .width(30.dp)
+                        .padding(2.dp),
+                ) {
+                    Text(text = "+")
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.width(10.dp))
 
-        Text(
-            text = "+ #",
-            Modifier
-                .width(125.dp)
+        Card(
+            shape = RectangleShape,
+            modifier = Modifier
                 .height(40.dp)
-                .border(5.dp, Color.Red, RectangleShape),
-            textAlign = TextAlign.Center
-        )
+                .width(125.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    onClick = { diceModifier-- },
+                    shape = RectangleShape,
+                    modifier = Modifier
+                        .height(30.dp)
+                        .width(30.dp)
+                        .padding(2.dp),
+                ) {
+                    Text(text = "-")
+                }
+
+                Text(
+                    text = "+ ${diceModifier}",
+                    Modifier
+                        .width(60.dp)
+                        .height(40.dp),
+                    textAlign = TextAlign.Center,
+                )
+
+                Button(
+                    onClick = { diceModifier++ },
+                    shape = RectangleShape,
+                    modifier = Modifier
+                        .height(30.dp)
+                        .width(30.dp)
+                        .padding(2.dp),
+                ) {
+                    Text(text = "+")
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.width(10.dp))
 
         Button(
             onClick = { /*TODO*/ },
             shape = RectangleShape,
-            modifier = Modifier
-                .height(40.dp)
-                .width(40.dp)
+            modifier = Modifier.wrapContentSize()
+//                .height(40.dp)
+//                .width(40.dp)
         ) {
             Text(text = "X")
         }
