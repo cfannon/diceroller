@@ -1,12 +1,10 @@
 package com.example.diceroller
 
-import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -26,6 +23,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -63,7 +61,7 @@ fun DiceRollerApp(modifier: Modifier = Modifier) {
 
         val context = LocalContext.current
         val generator = TestNumberGenerator()
-        var diceRollResult by remember { mutableStateOf(0) }
+        var finalResult by remember { mutableStateOf(0) }
         var diceValue by remember { mutableStateOf(0) }
 
         var diceQuantityValue by remember { mutableStateOf(1)}
@@ -88,19 +86,21 @@ fun DiceRollerApp(modifier: Modifier = Modifier) {
             if (diceValue == 0) {
                 Toast.makeText(context, "Please select a dice before rolling.", Toast.LENGTH_SHORT).show()
             } else {
-                diceRollResult = generator.rollDice(diceValue)
-                Toast.makeText(context, "Roll Result : $diceRollResult", Toast.LENGTH_SHORT).show()
+
+                // Final Result = Selected Dice Value Roll + (Selected Dice Value per Dice Quantity) + Dice Modifier
+                finalResult = generator.rollDice(diceValue) + diceModifierValue
+                Toast.makeText(context, "Roll Result : $finalResult", Toast.LENGTH_SHORT).show()
             }
 
         }
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsSection(diceRollResult, diceModifierValue)
+        ResultsSection(finalResult, diceModifierValue)
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsBreakdownSection(diceRollResult, diceModifierValue)
+        ResultsBreakdownSection(finalResult, diceModifierValue)
     }
 
 }
@@ -210,9 +210,7 @@ fun DiceSelection(onClick: (Int) -> Unit) {
                 .height(70.dp)
                 .width(70.dp)
         ) {
-            Text(
-                text = "d10", Modifier.width(60.dp)
-            )
+            Text(text = "d10")
         }
 
         Spacer(modifier = Modifier.width(10.dp))
@@ -238,9 +236,7 @@ fun DiceSelection(onClick: (Int) -> Unit) {
                 .height(70.dp)
                 .width(70.dp)
         ) {
-            Text(
-                text = "d20"
-            )
+            Text(text = "d20")
         }
 
         Spacer(modifier = Modifier.width(10.dp))
@@ -259,8 +255,8 @@ fun DiceSelection(onClick: (Int) -> Unit) {
 
 @Composable
 fun ModifierButtons() {
-    var diceQuantity by remember { mutableStateOf(1) }
-    var diceModifier by remember { mutableStateOf(0) }
+    var diceQuantity by remember { mutableIntStateOf(1) }
+    var diceModifier by remember { mutableIntStateOf(0) }
 
     Row(
         Modifier
@@ -269,7 +265,10 @@ fun ModifierButtons() {
         verticalAlignment = Alignment.CenterVertically
 
     ){
-        // Dice Quantity
+        /*
+         Dice Quantity:
+         - Should not be able to go below 1 dice
+         */
         Card(
             shape = RectangleShape,
             modifier = Modifier
@@ -282,8 +281,12 @@ fun ModifierButtons() {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    // TODO: set a minimum of 1d
-                    onClick = { diceQuantity-- },
+                    // Better way to do this??
+                    onClick = {
+                        if (diceQuantity > 1)
+                            { diceQuantity--
+                        } else {diceQuantity = 1}
+                    },
                     shape = RectangleShape,
                     modifier = Modifier
                         .height(32.dp)
@@ -339,13 +342,12 @@ fun ModifierButtons() {
                 }
 
                 Text(
-
                     text =
-                        // Is there a better way to do this, to show dice modifer as a negative number?
+                        // Is there a better way to do this, to show dice modifier as a negative number?
                         if (diceModifier < 0 ) {
                             "$diceModifier"
                         } else {
-                            "+ $diceModifier"
+                            "+$diceModifier"
                                },
                     Modifier
                         .width(50.dp),
@@ -367,9 +369,17 @@ fun ModifierButtons() {
 
         Spacer(modifier = Modifier.width(10.dp))
 
-        // Reset Button
+        /*
+        Reset Button:
+        - Should clear any selected Dice Button
+        - Should reset Dice Quantity to 1
+        - Should reset Dice Modifier to 0
+         */
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                diceQuantity = 1
+                diceModifier = 0
+                      },
             shape = RectangleShape,
             modifier = Modifier.wrapContentSize()
 //                .height(40.dp)
@@ -396,8 +406,7 @@ fun PrimaryRollButton(onClick: () -> Unit) {
         ) {
             Text(
                 text = "Roll!",
-                fontSize = 25.sp,
-
+                fontSize = 25.sp
                 )
         }
     }
@@ -405,7 +414,7 @@ fun PrimaryRollButton(onClick: () -> Unit) {
 
 @Composable
 fun ResultsSection(diceRollTotal: Int, diceModifier: Int)  {
-    var totalResult = diceRollTotal + diceModifier
+    var finalResult = diceRollTotal + diceModifier
 
     Row (
         Modifier
@@ -418,7 +427,7 @@ fun ResultsSection(diceRollTotal: Int, diceModifier: Int)  {
             horizontalAlignment = Alignment.CenterHorizontally) {
 
             Text(
-                text = "$totalResult",
+                text = "$finalResult",
                 fontSize = 80.sp
             )
             Text(
@@ -427,12 +436,11 @@ fun ResultsSection(diceRollTotal: Int, diceModifier: Int)  {
             )
         }
     }
-
 }
 
 @Composable
 fun ResultsBreakdownSection(diceRollTotal: Int, diceModifier: Int) {
-    var totalResult = diceRollTotal + diceModifier
+    var finalResult = diceRollTotal + diceModifier
 
     Row(
         Modifier
@@ -446,10 +454,11 @@ fun ResultsBreakdownSection(diceRollTotal: Int, diceModifier: Int) {
                 .padding(20.dp),
         ) {
             Row() {
-                Text(text = "Results: $diceRollTotal + $diceModifier = $totalResult")
+//                Text(text = "Results: $diceRollTotal + $diceModifier = $totalResult")
+                Text(text = "Results Breakdown:")
             }
             Row() {
-                Text(text = "Results Breakdown")
+                Text(text = "$finalResult: <D1> + <D2> + <D3> + <Modifier>")
             }
         }
     }
