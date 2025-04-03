@@ -63,8 +63,11 @@ fun DiceRollerApp(modifier: Modifier = Modifier) {
 
         val context = LocalContext.current
         val generator = TestNumberGenerator()
-        var rollResult by remember { mutableStateOf(0) }
+        var diceRollResult by remember { mutableStateOf(0) }
         var diceValue by remember { mutableStateOf(0) }
+
+        var diceQuantityValue by remember { mutableStateOf(1)}
+        var diceModifierValue by remember { mutableStateOf(0)}
 
 
         HeaderSection()
@@ -81,13 +84,23 @@ fun DiceRollerApp(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(10.dp))
 
         PrimaryRollButton {
-            rollResult = generator.rollDice(diceValue)
-            Toast.makeText(context, "Roll Result : $rollResult", Toast.LENGTH_SHORT).show()
+            // Currently prevents crash when tapping 'Roll' without selecting a dice - Better way?
+            if (diceValue == 0) {
+                Toast.makeText(context, "Please select a dice before rolling.", Toast.LENGTH_SHORT).show()
+            } else {
+                diceRollResult = generator.rollDice(diceValue)
+                Toast.makeText(context, "Roll Result : $diceRollResult", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
-        Spacer(modifier = Modifier.height(100.dp))
+        Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsSection(rollResult)
+        ResultsSection(diceRollResult, diceModifierValue)
+
+        Spacer(modifier = Modifier.height(25.dp))
+
+        ResultsBreakdownSection(diceRollResult, diceModifierValue)
     }
 
 }
@@ -187,7 +200,7 @@ fun DiceSelection(onClick: (Int) -> Unit) {
     Row (
         Modifier
             .fillMaxWidth()
-            .padding(top = 5.dp, bottom = 10.dp),
+            .padding(top = 5.dp, bottom = 5.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Button(
@@ -253,8 +266,10 @@ fun ModifierButtons() {
         Modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
 
     ){
+        // Dice Quantity
         Card(
             shape = RectangleShape,
             modifier = Modifier
@@ -267,11 +282,12 @@ fun ModifierButtons() {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
+                    // TODO: set a minimum of 1d
                     onClick = { diceQuantity-- },
                     shape = RectangleShape,
                     modifier = Modifier
-                        .height(30.dp)
-                        .width(30.dp)
+                        .height(32.dp)
+                        .width(32.dp)
                         .padding(2.dp),
                 ) {
                     Text(text = "-")
@@ -280,8 +296,7 @@ fun ModifierButtons() {
                 Text(
                     text = "${diceQuantity}d",
                     Modifier
-                        .width(60.dp)
-                        .height(40.dp),
+                        .width(50.dp),
                     textAlign = TextAlign.Center,
                 )
 
@@ -289,8 +304,8 @@ fun ModifierButtons() {
                     onClick = { diceQuantity++ },
                     shape = RectangleShape,
                     modifier = Modifier
-                        .height(30.dp)
-                        .width(30.dp)
+                        .height(32.dp)
+                        .width(32.dp)
                         .padding(2.dp),
                 ) {
                     Text(text = "+")
@@ -300,6 +315,7 @@ fun ModifierButtons() {
 
         Spacer(modifier = Modifier.width(10.dp))
 
+        // Dice Modifier
         Card(
             shape = RectangleShape,
             modifier = Modifier
@@ -315,18 +331,24 @@ fun ModifierButtons() {
                     onClick = { diceModifier-- },
                     shape = RectangleShape,
                     modifier = Modifier
-                        .height(30.dp)
-                        .width(30.dp)
+                        .height(32.dp)
+                        .width(32.dp)
                         .padding(2.dp),
                 ) {
                     Text(text = "-")
                 }
 
                 Text(
-                    text = "+ ${diceModifier}",
+
+                    text =
+                        // Is there a better way to do this, to show dice modifer as a negative number?
+                        if (diceModifier < 0 ) {
+                            "$diceModifier"
+                        } else {
+                            "+ $diceModifier"
+                               },
                     Modifier
-                        .width(60.dp)
-                        .height(40.dp),
+                        .width(50.dp),
                     textAlign = TextAlign.Center,
                 )
 
@@ -334,8 +356,8 @@ fun ModifierButtons() {
                     onClick = { diceModifier++ },
                     shape = RectangleShape,
                     modifier = Modifier
-                        .height(30.dp)
-                        .width(30.dp)
+                        .height(32.dp)
+                        .width(32.dp)
                         .padding(2.dp),
                 ) {
                     Text(text = "+")
@@ -345,6 +367,7 @@ fun ModifierButtons() {
 
         Spacer(modifier = Modifier.width(10.dp))
 
+        // Reset Button
         Button(
             onClick = { /*TODO*/ },
             shape = RectangleShape,
@@ -381,7 +404,36 @@ fun PrimaryRollButton(onClick: () -> Unit) {
 }
 
 @Composable
-fun ResultsSection(total: Int) {
+fun ResultsSection(diceRollTotal: Int, diceModifier: Int)  {
+    var totalResult = diceRollTotal + diceModifier
+
+    Row (
+        Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Column(
+            Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+
+            Text(
+                text = "$totalResult",
+                fontSize = 80.sp
+            )
+            Text(
+                text = "$diceRollTotal + $diceModifier",
+                fontSize = 20.sp
+            )
+        }
+    }
+
+}
+
+@Composable
+fun ResultsBreakdownSection(diceRollTotal: Int, diceModifier: Int) {
+    var totalResult = diceRollTotal + diceModifier
+
     Row(
         Modifier
             .fillMaxWidth(),
@@ -394,7 +446,7 @@ fun ResultsSection(total: Int) {
                 .padding(20.dp),
         ) {
             Row() {
-                Text(text = "Results: $total")
+                Text(text = "Results: $diceRollTotal + $diceModifier = $totalResult")
             }
             Row() {
                 Text(text = "Results Breakdown")
