@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -56,14 +57,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun DiceRollerApp(modifier: Modifier = Modifier) {
+fun DiceRollerApp(modifier: Modifier = Modifier, viewModel: DiceRollerViewModel = DiceRollerViewModel()) {
     Column (modifier.fillMaxHeight()) {
 
-        val viewModel = DiceRollerViewModel()
         val context = LocalContext.current
         val generator = TestNumberGenerator()
         var finalResult by remember { mutableStateOf(0) }
-        var diceValue = viewModel.diceValue
+        val diceValue by viewModel.diceValue.collectAsState()
 
         var diceQuantityValue by remember { mutableStateOf(1)}
         var diceModifierValue by remember { mutableStateOf(0)}
@@ -84,7 +84,7 @@ fun DiceRollerApp(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(10.dp))
 
         PrimaryRollButton {
-            // Currently prevents crash when tapping 'Roll' without selecting a dice - Better way?
+            // Currently prevents crash when tapping 'Roll' without selecting a dice
             if (diceValue == 0) {
                 Toast.makeText(context, "Please select a dice before rolling.", Toast.LENGTH_SHORT).show()
             } else {
