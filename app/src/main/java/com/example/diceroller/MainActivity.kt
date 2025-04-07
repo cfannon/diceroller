@@ -86,7 +86,6 @@ fun DiceRollerApp(modifier: Modifier = Modifier) {
             if (diceValue == 0) {
                 Toast.makeText(context, "Please select a dice before rolling.", Toast.LENGTH_SHORT).show()
             } else {
-
                 // Final Result = Selected Dice Value Roll + (Selected Dice Value per Dice Quantity) + Dice Modifier
                 finalResult = generator.rollDice(diceValue) + diceModifierValue
                 Toast.makeText(context, "Roll Result : $finalResult", Toast.LENGTH_SHORT).show()
@@ -281,11 +280,8 @@ fun ModifierButtons() {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    // Better way to do this??
                     onClick = {
-                        if (diceQuantity > 1)
-                            { diceQuantity--
-                        } else {diceQuantity = 1}
+                        if (diceQuantity > 1) diceQuantity-- else {diceQuantity = 1}
                     },
                     shape = RectangleShape,
                     modifier = Modifier
