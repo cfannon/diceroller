@@ -59,13 +59,15 @@ class MainActivity : ComponentActivity() {
 fun DiceRollerApp(modifier: Modifier = Modifier) {
     Column (modifier.fillMaxHeight()) {
 
+        val viewModel = DiceRollerViewModel()
         val context = LocalContext.current
         val generator = TestNumberGenerator()
         var finalResult by remember { mutableStateOf(0) }
-        var diceValue by remember { mutableStateOf(0) }
+        var diceValue = viewModel.diceValue
 
         var diceQuantityValue by remember { mutableStateOf(1)}
         var diceModifierValue by remember { mutableStateOf(0)}
+
 
 
         HeaderSection()
@@ -73,7 +75,7 @@ fun DiceRollerApp(modifier: Modifier = Modifier) {
         Subtitle()
 
         DiceSelection { selectedDiceValue ->
-            diceValue = selectedDiceValue
+            viewModel.onDiceSelectionClick(selectedDiceValue)
             Toast.makeText(context, "Dice Selection : $selectedDiceValue", Toast.LENGTH_SHORT).show()
         }
 
