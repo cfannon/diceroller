@@ -57,15 +57,21 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun DiceRollerApp(modifier: Modifier = Modifier, viewModel: DiceRollerViewModel = DiceRollerViewModel()) {
+fun DiceRollerApp(viewModel: DiceRollerViewModel = DiceRollerViewModel()) {
+    DiceRollerLayout(viewModel = viewModel)
+
+}
+
+@Composable
+fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewModel = DiceRollerViewModel()) {
     Column (modifier.fillMaxHeight()) {
 
         val context = LocalContext.current
-        val generator = TestNumberGenerator()
-        var finalResult by remember { mutableStateOf(0) }
         val diceValue by viewModel.diceValue.collectAsState()
+        val finalResult by viewModel.finalResult.collectAsState()
 
-        var diceQuantityValue by remember { mutableStateOf(1)}
+        val diceQuantity by viewModel.diceQuantity.collectAsState()
+
         var diceModifierValue by remember { mutableStateOf(0)}
 
 
@@ -79,7 +85,11 @@ fun DiceRollerApp(modifier: Modifier = Modifier, viewModel: DiceRollerViewModel 
             Toast.makeText(context, "Dice Selection : $selectedDiceValue", Toast.LENGTH_SHORT).show()
         }
 
-        ModifierButtons()
+        ModifierButtons(
+            onDiceQuantityDownClick = viewModel::onDiceQuantityDownClick,
+            onDiceQuantityUpClick = viewModel::onDiceQuantityUpClick,
+            diceQuantity = diceQuantity
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -88,8 +98,7 @@ fun DiceRollerApp(modifier: Modifier = Modifier, viewModel: DiceRollerViewModel 
             if (diceValue == 0) {
                 Toast.makeText(context, "Please select a dice before rolling.", Toast.LENGTH_SHORT).show()
             } else {
-                // Final Result = Selected Dice Value Roll + (Selected Dice Value per Dice Quantity) + Dice Modifier
-                finalResult = generator.rollDice(diceValue) + diceModifierValue
+                viewModel.onDiceRollClick()
                 Toast.makeText(context, "Roll Result : $finalResult", Toast.LENGTH_SHORT).show()
             }
 
@@ -255,8 +264,12 @@ fun DiceSelection(onClick: (Int) -> Unit) {
 }
 
 @Composable
-fun ModifierButtons() {
-    var diceQuantity by remember { mutableIntStateOf(1) }
+fun ModifierButtons(
+    onDiceQuantityDownClick: () -> Unit,
+    onDiceQuantityUpClick: () -> Unit,
+    diceQuantity: Int
+) {
+
     var diceModifier by remember { mutableIntStateOf(0) }
 
     Row(
@@ -282,9 +295,7 @@ fun ModifierButtons() {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = {
-                        if (diceQuantity > 1) diceQuantity-- else {diceQuantity = 1}
-                    },
+                    onClick = { onDiceQuantityDownClick() },
                     shape = RectangleShape,
                     modifier = Modifier
                         .height(32.dp)
@@ -302,7 +313,7 @@ fun ModifierButtons() {
                 )
 
                 Button(
-                    onClick = { diceQuantity++ },
+                    onClick = { onDiceQuantityUpClick() },
                     shape = RectangleShape,
                     modifier = Modifier
                         .height(32.dp)
@@ -375,7 +386,7 @@ fun ModifierButtons() {
          */
         Button(
             onClick = {
-                diceQuantity = 1
+//                diceQuantity = 1
                 diceModifier = 0
                       },
             shape = RectangleShape,
