@@ -55,6 +55,7 @@ class DiceRollerViewModel : ViewModel() {
     }
 
     fun onResetClick() {
+        _diceValue.update { 0 }
         _diceQuantity.update { 1 }
         _diceModifier.update { 0 }
         _diceRollResult.update { 0 }
