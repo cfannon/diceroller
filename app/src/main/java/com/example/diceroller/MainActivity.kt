@@ -67,11 +67,13 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
     Column (modifier.fillMaxHeight()) {
 
         val context = LocalContext.current
-        val diceValue by viewModel.diceValue.collectAsState()
-        val finalResult by viewModel.finalResult.collectAsState()
 
+        val diceValue by viewModel.diceValue.collectAsState()
         val diceQuantity by viewModel.diceQuantity.collectAsState()
         val diceModifier by viewModel.diceModifier.collectAsState()
+
+        val diceRollResult by viewModel.diceRollResult.collectAsState()
+        val finalResult by viewModel.finalResult.collectAsState()
 
         HeaderSection()
 
@@ -100,20 +102,19 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
                 Toast.makeText(context, "Please select a dice before rolling.", Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.onDiceRollClick()
-//                Toast.makeText(context, "Roll Result : $finalResult", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Roll Result : $diceRollResult", Toast.LENGTH_SHORT).show()
             }
 
         }
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsSection(finalResult, diceModifier)
+        ResultsSection(diceRollResult = diceRollResult, diceModifier = diceModifier)
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsBreakdownSection(finalResult, diceModifier)
+        ResultsBreakdownSection(diceRollResult = diceRollResult, diceModifier = diceModifier)
     }
-
 }
 
 @Composable
@@ -423,8 +424,9 @@ fun PrimaryRollButton(onClick: () -> Unit) {
 }
 
 @Composable
-fun ResultsSection(diceRollTotal: Int, diceModifier: Int)  {
-    var finalResult = diceRollTotal + diceModifier
+fun ResultsSection(diceRollResult: Int, diceModifier: Int)  {
+    //TODO: Move finalResult calculations out of Composable
+    val finalResult = diceRollResult + diceModifier
 
     Row (
         Modifier
@@ -441,7 +443,7 @@ fun ResultsSection(diceRollTotal: Int, diceModifier: Int)  {
                 fontSize = 80.sp
             )
             Text(
-                text = "$diceRollTotal + $diceModifier",
+                text = "$diceRollResult + $diceModifier",
                 fontSize = 20.sp
             )
         }
@@ -449,8 +451,9 @@ fun ResultsSection(diceRollTotal: Int, diceModifier: Int)  {
 }
 
 @Composable
-fun ResultsBreakdownSection(diceRollTotal: Int, diceModifier: Int) {
-    var finalResult = diceRollTotal + diceModifier
+fun ResultsBreakdownSection(diceRollResult: Int, diceModifier: Int) {
+    //TODO: Move finalResult calculations out of Composable
+    val finalResult = diceRollResult + diceModifier
 
     Row(
         Modifier
@@ -464,11 +467,10 @@ fun ResultsBreakdownSection(diceRollTotal: Int, diceModifier: Int) {
                 .padding(20.dp),
         ) {
             Row() {
-//                Text(text = "Results: $diceRollTotal + $diceModifier = $totalResult")
                 Text(text = "Results Breakdown:")
             }
             Row() {
-                Text(text = "$finalResult: <D1> + <D2> + <D3> + <Modifier>")
+                Text(text = "$finalResult: <D1> + <D2> + <D3> + $diceModifier")
             }
         }
     }

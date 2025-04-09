@@ -1,10 +1,5 @@
 package com.example.diceroller
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,6 +18,9 @@ class DiceRollerViewModel : ViewModel() {
     private val _diceModifier = MutableStateFlow(0)
     val diceModifier = _diceModifier.asStateFlow()
 
+    private val _diceRollResult = MutableStateFlow(0)
+    val diceRollResult = _diceRollResult.asStateFlow()
+
     private val _finalResult = MutableStateFlow(0)
     val finalResult = _finalResult.asStateFlow()
 
@@ -36,8 +34,8 @@ class DiceRollerViewModel : ViewModel() {
         for (i in 1..diceQuantity.value) {
             diceRollTotal += generator.rollDice(diceValue.value)
         }
-        _finalResult.update { diceRollTotal }
-//        + diceModifierValue
+        _diceRollResult.update {diceRollTotal}
+//        _finalResult.update { diceRollTotal }
     }
 
     fun onDiceQuantityDownClick() {
@@ -59,5 +57,6 @@ class DiceRollerViewModel : ViewModel() {
     fun onResetClick() {
         _diceQuantity.update { 1 }
         _diceModifier.update { 0 }
+        _diceRollResult.update { 0 }
     }
 }
