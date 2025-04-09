@@ -88,7 +88,8 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
             diceQuantity = diceQuantity,
             onDiceModifierDownClick = viewModel::onDiceModifierDownClick,
             onDiceModifierUpClick = viewModel::onDiceModifierUpClick,
-            diceModifier = diceModifier
+            diceModifier = diceModifier,
+            onResetClick = viewModel::onResetClick
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -270,7 +271,8 @@ fun ModifierButtons(
     diceQuantity: Int,
     onDiceModifierDownClick: () -> Unit,
     onDiceModifierUpClick: () -> Unit,
-    diceModifier: Int
+    diceModifier: Int,
+    onResetClick: () -> Unit
 ) {
 
     Row(
@@ -384,12 +386,10 @@ fun ModifierButtons(
         - Should clear any selected Dice Button
         - Should reset Dice Quantity to 1
         - Should reset Dice Modifier to 0
+        - Should clear previously displayed roll
          */
         Button(
-            onClick = {
-//                diceQuantity = 1
-//                diceModifier = 0
-                      },
+            onClick = { onResetClick() },
             shape = RectangleShape,
             modifier = Modifier.wrapContentSize()
 //                .height(40.dp)
