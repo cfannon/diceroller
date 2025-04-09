@@ -12,20 +12,22 @@ import kotlinx.coroutines.flow.update
 
 class DiceRollerViewModel : ViewModel() {
 
-    private val _diceValue = MutableStateFlow(0)
-    val diceValue = _diceValue.asStateFlow()
-
     private val generator = TestNumberGenerator()
 
-    private val _finalResult = MutableStateFlow(0)
-    val finalResult = _finalResult.asStateFlow()
+    private val _diceValue = MutableStateFlow(0)
+    val diceValue = _diceValue.asStateFlow()
 
     private val _diceQuantity = MutableStateFlow(1)
     val diceQuantity = _diceQuantity.asStateFlow()
 
+    private val _diceModifier = MutableStateFlow(0)
+    val diceModifier = _diceModifier.asStateFlow()
+
+    private val _finalResult = MutableStateFlow(0)
+    val finalResult = _finalResult.asStateFlow()
+
     fun onDiceSelectionClick(selectedDiceValue: Int) {
         _diceValue.update { selectedDiceValue }
-
     }
 
     fun onDiceRollClick() {
@@ -46,7 +48,12 @@ class DiceRollerViewModel : ViewModel() {
         _diceQuantity.update { it+1 }
     }
 
+    fun onDiceModifierDownClick() {
+        _diceModifier.update { it-1 }
+    }
 
-
+    fun onDiceModifierUpClick() {
+        _diceModifier.update { it+1 }
+    }
 
 }

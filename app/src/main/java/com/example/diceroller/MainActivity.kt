@@ -71,10 +71,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
         val finalResult by viewModel.finalResult.collectAsState()
 
         val diceQuantity by viewModel.diceQuantity.collectAsState()
-
-        var diceModifierValue by remember { mutableStateOf(0)}
-
-
+        val diceModifier by viewModel.diceModifier.collectAsState()
 
         HeaderSection()
 
@@ -88,7 +85,10 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
         ModifierButtons(
             onDiceQuantityDownClick = viewModel::onDiceQuantityDownClick,
             onDiceQuantityUpClick = viewModel::onDiceQuantityUpClick,
-            diceQuantity = diceQuantity
+            diceQuantity = diceQuantity,
+            onDiceModifierDownClick = viewModel::onDiceModifierDownClick,
+            onDiceModifierUpClick = viewModel::onDiceModifierUpClick,
+            diceModifier = diceModifier
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -99,18 +99,18 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
                 Toast.makeText(context, "Please select a dice before rolling.", Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.onDiceRollClick()
-                Toast.makeText(context, "Roll Result : $finalResult", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "Roll Result : $finalResult", Toast.LENGTH_SHORT).show()
             }
 
         }
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsSection(finalResult, diceModifierValue)
+        ResultsSection(finalResult, diceModifier)
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsBreakdownSection(finalResult, diceModifierValue)
+        ResultsBreakdownSection(finalResult, diceModifier)
     }
 
 }
@@ -267,10 +267,11 @@ fun DiceSelection(onClick: (Int) -> Unit) {
 fun ModifierButtons(
     onDiceQuantityDownClick: () -> Unit,
     onDiceQuantityUpClick: () -> Unit,
-    diceQuantity: Int
+    diceQuantity: Int,
+    onDiceModifierDownClick: () -> Unit,
+    onDiceModifierUpClick: () -> Unit,
+    diceModifier: Int
 ) {
-
-    var diceModifier by remember { mutableIntStateOf(0) }
 
     Row(
         Modifier
@@ -340,7 +341,7 @@ fun ModifierButtons(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = { diceModifier-- },
+                    onClick = { onDiceModifierDownClick() },
                     shape = RectangleShape,
                     modifier = Modifier
                         .height(32.dp)
@@ -364,7 +365,7 @@ fun ModifierButtons(
                 )
 
                 Button(
-                    onClick = { diceModifier++ },
+                    onClick = { onDiceModifierUpClick() },
                     shape = RectangleShape,
                     modifier = Modifier
                         .height(32.dp)
@@ -387,7 +388,7 @@ fun ModifierButtons(
         Button(
             onClick = {
 //                diceQuantity = 1
-                diceModifier = 0
+//                diceModifier = 0
                       },
             shape = RectangleShape,
             modifier = Modifier.wrapContentSize()
