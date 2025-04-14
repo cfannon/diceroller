@@ -72,6 +72,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
         val diceQuantity by viewModel.diceQuantity.collectAsState()
         val diceModifier by viewModel.diceModifier.collectAsState()
 
+        val rollPlusModifier by viewModel.rollPlusModifier.collectAsState()
         val diceRollResult by viewModel.diceRollResult.collectAsState()
         val finalResult by viewModel.finalResult.collectAsState()
 
@@ -109,11 +110,11 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsSection(diceRollResult = diceRollResult, diceModifier = diceModifier)
+        ResultsSection(finalResult = finalResult, rollPlusModifier = rollPlusModifier)
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsBreakdownSection(diceRollResult = diceRollResult, diceModifier = diceModifier)
+        ResultsBreakdownSection(diceRollResult = diceRollResult, diceModifier = diceModifier, finalResult = finalResult)
     }
 }
 
@@ -424,9 +425,9 @@ fun PrimaryRollButton(onClick: () -> Unit) {
 }
 
 @Composable
-fun ResultsSection(diceRollResult: Int, diceModifier: Int)  {
+fun ResultsSection(finalResult: Int, rollPlusModifier: String)  {
     //TODO: Move finalResult calculations out of Composable
-    val finalResult = diceRollResult + diceModifier
+//    val finalResult = diceRollResult + diceModifier
 
     Row (
         Modifier
@@ -443,7 +444,7 @@ fun ResultsSection(diceRollResult: Int, diceModifier: Int)  {
                 fontSize = 80.sp
             )
             Text(
-                text = "$diceRollResult + $diceModifier",
+                text = rollPlusModifier,
                 fontSize = 20.sp
             )
         }
@@ -451,9 +452,9 @@ fun ResultsSection(diceRollResult: Int, diceModifier: Int)  {
 }
 
 @Composable
-fun ResultsBreakdownSection(diceRollResult: Int, diceModifier: Int) {
+fun ResultsBreakdownSection(diceRollResult: Int, diceModifier: Int, finalResult: Int) {
     //TODO: Move finalResult calculations out of Composable
-    val finalResult = diceRollResult + diceModifier
+//    val finalResult = diceRollResult + diceModifier
 
     Row(
         Modifier
