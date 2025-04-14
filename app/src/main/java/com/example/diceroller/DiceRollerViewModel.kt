@@ -71,6 +71,7 @@ class DiceRollerViewModel : ViewModel() {
         _diceValue.update { 0 }
         _diceQuantity.update { 1 }
         _diceModifier.update { 0 }
+        _diceModifierResult.update { 0 }
         _diceRollResult.update { 0 }
         _diceRollPlusModifier.update { "0 + 0"}
         _finalResult.update { 0 }
