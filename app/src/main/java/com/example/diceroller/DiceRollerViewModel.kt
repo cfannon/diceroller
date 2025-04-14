@@ -21,11 +21,11 @@ class DiceRollerViewModel : ViewModel() {
     private val _diceRollResult = MutableStateFlow(0)
     val diceRollResult = _diceRollResult.asStateFlow()
 
+    private val _diceRollPlusModifier = MutableStateFlow("0 + 0")
+    val diceRollPlusModifier = _diceRollPlusModifier.asStateFlow()
+
     private val _finalResult = MutableStateFlow(0)
     val finalResult = _finalResult.asStateFlow()
-
-    private val _rollPlusModifier = MutableStateFlow("0 + 0")
-    val rollPlusModifier = _rollPlusModifier.asStateFlow()
 
     fun onDiceSelectionClick(selectedDiceValue: Int) {
         _diceValue.update { selectedDiceValue }
@@ -37,8 +37,7 @@ class DiceRollerViewModel : ViewModel() {
         for (i in 1..diceQuantity.value) {
             diceRollTotal += generator.rollDice(diceValue.value)
         }
-//        _diceRollResult.update { diceRollTotal }
-        _rollPlusModifier.update {"$diceRollTotal + ${diceModifier.value}"}
+        _diceRollPlusModifier.update {"$diceRollTotal + ${diceModifier.value}"}
         _finalResult.update { diceRollTotal + diceModifier.value }
     }
 
@@ -63,6 +62,7 @@ class DiceRollerViewModel : ViewModel() {
         _diceQuantity.update { 1 }
         _diceModifier.update { 0 }
         _diceRollResult.update { 0 }
+        _diceRollPlusModifier.update { "0 + 0"}
         _finalResult.update { 0 }
     }
 }

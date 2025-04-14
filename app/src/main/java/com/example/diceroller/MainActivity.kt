@@ -24,10 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -72,7 +68,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
         val diceQuantity by viewModel.diceQuantity.collectAsState()
         val diceModifier by viewModel.diceModifier.collectAsState()
 
-        val rollPlusModifier by viewModel.rollPlusModifier.collectAsState()
+        val diceRollPlusModifier by viewModel.diceRollPlusModifier.collectAsState()
         val diceRollResult by viewModel.diceRollResult.collectAsState()
         val finalResult by viewModel.finalResult.collectAsState()
 
@@ -98,23 +94,21 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
         Spacer(modifier = Modifier.height(10.dp))
 
         PrimaryRollButton {
-            // Currently prevents crash when tapping 'Roll' without selecting a dice
             if (diceValue == 0) {
                 Toast.makeText(context, "Please select a dice before rolling.", Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.onDiceRollClick()
                 Toast.makeText(context, "Roll Result : $diceRollResult", Toast.LENGTH_SHORT).show()
             }
-
         }
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsSection(finalResult = finalResult, rollPlusModifier = rollPlusModifier)
+        ResultsSection(finalResult = finalResult, diceRollPlusModifier = diceRollPlusModifier)
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsBreakdownSection(diceRollResult = diceRollResult, diceModifier = diceModifier, finalResult = finalResult)
+        ResultsBreakdownSection(finalResult = finalResult, diceRollPlusModifier = diceRollPlusModifier)
     }
 }
 
@@ -425,10 +419,7 @@ fun PrimaryRollButton(onClick: () -> Unit) {
 }
 
 @Composable
-fun ResultsSection(finalResult: Int, rollPlusModifier: String)  {
-    //TODO: Move finalResult calculations out of Composable
-//    val finalResult = diceRollResult + diceModifier
-
+fun ResultsSection(finalResult: Int, diceRollPlusModifier: String) {
     Row (
         Modifier
             .fillMaxWidth(),
@@ -444,7 +435,7 @@ fun ResultsSection(finalResult: Int, rollPlusModifier: String)  {
                 fontSize = 80.sp
             )
             Text(
-                text = rollPlusModifier,
+                text = diceRollPlusModifier,
                 fontSize = 20.sp
             )
         }
@@ -452,10 +443,7 @@ fun ResultsSection(finalResult: Int, rollPlusModifier: String)  {
 }
 
 @Composable
-fun ResultsBreakdownSection(diceRollResult: Int, diceModifier: Int, finalResult: Int) {
-    //TODO: Move finalResult calculations out of Composable
-//    val finalResult = diceRollResult + diceModifier
-
+fun ResultsBreakdownSection(finalResult: Int, diceRollPlusModifier: String) {
     Row(
         Modifier
             .fillMaxWidth(),
@@ -471,7 +459,7 @@ fun ResultsBreakdownSection(diceRollResult: Int, diceModifier: Int, finalResult:
                 Text(text = "Results Breakdown:")
             }
             Row() {
-                Text(text = "$finalResult: <D1> + <D2> + <D3> + $diceModifier")
+                Text(text = "$finalResult: <D1> + <D2> + <D3> + $diceRollPlusModifier")
             }
         }
     }
