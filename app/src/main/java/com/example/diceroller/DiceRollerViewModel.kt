@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.math.abs
 
 class DiceRollerViewModel : ViewModel() {
 
@@ -17,6 +18,9 @@ class DiceRollerViewModel : ViewModel() {
 
     private val _diceModifier = MutableStateFlow(0)
     val diceModifier = _diceModifier.asStateFlow()
+
+    private val _diceModifierResult = MutableStateFlow(0)
+    val diceModifierResult = _diceModifierResult.asStateFlow()
 
     private val _diceRollResult = MutableStateFlow(0)
     val diceRollResult = _diceRollResult.asStateFlow()
@@ -37,7 +41,13 @@ class DiceRollerViewModel : ViewModel() {
         for (i in 1..diceQuantity.value) {
             diceRollTotal += generator.rollDice(diceValue.value)
         }
-        _diceRollPlusModifier.update {"$diceRollTotal + ${diceModifier.value}"}
+
+        if (diceModifier.value < 0) {
+            _diceRollPlusModifier.update {"$diceRollTotal ${diceModifier.value}"}
+        } else {
+            _diceRollPlusModifier.update {"$diceRollTotal + ${diceModifier.value}"}
+        }
+        _diceModifierResult.update { diceModifier.value }
         _finalResult.update { diceRollTotal + diceModifier.value }
     }
 

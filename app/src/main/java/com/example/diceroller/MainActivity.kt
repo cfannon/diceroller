@@ -67,6 +67,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
         val diceValue by viewModel.diceValue.collectAsState()
         val diceQuantity by viewModel.diceQuantity.collectAsState()
         val diceModifier by viewModel.diceModifier.collectAsState()
+        val diceModifierResult by viewModel.diceModifierResult.collectAsState()
 
         val diceRollPlusModifier by viewModel.diceRollPlusModifier.collectAsState()
         val diceRollResult by viewModel.diceRollResult.collectAsState()
@@ -108,7 +109,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsBreakdownSection(finalResult = finalResult, diceRollPlusModifier = diceRollPlusModifier)
+        ResultsBreakdownSection(finalResult = finalResult, diceModifierResult = diceModifierResult)
     }
 }
 
@@ -443,7 +444,7 @@ fun ResultsSection(finalResult: Int, diceRollPlusModifier: String) {
 }
 
 @Composable
-fun ResultsBreakdownSection(finalResult: Int, diceRollPlusModifier: String) {
+fun ResultsBreakdownSection(finalResult: Int, diceModifierResult: Int) {
     Row(
         Modifier
             .fillMaxWidth(),
@@ -459,7 +460,13 @@ fun ResultsBreakdownSection(finalResult: Int, diceRollPlusModifier: String) {
                 Text(text = "Results Breakdown:")
             }
             Row() {
-                Text(text = "$finalResult: <D1> + <D2> + <D3> + $diceRollPlusModifier")
+                Text(text =
+                if (diceModifierResult < 0 ) {
+                    "$finalResult: <D1> + <D2> + <D3> $diceModifierResult"
+                } else {
+                    "$finalResult: <D1> + <D2> + <D3> + $diceModifierResult"
+                }
+                )
             }
         }
     }
