@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.diceroller.ui.theme.DiceRollerTheme
+import kotlin.math.abs
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -354,10 +355,11 @@ fun ModifierButtons(
                     text =
                         // Is there a better way to do this, to show dice modifier as a negative number?
                         if (diceModifier < 0 ) {
-                            "$diceModifier"
+                            val diceModifierAbsolute = abs(diceModifier)
+                            "- $diceModifierAbsolute"
                         } else {
-                            "+$diceModifier"
-                               },
+                            "+ $diceModifier"
+                        },
                     Modifier
                         .width(50.dp),
                     textAlign = TextAlign.Center,
@@ -462,11 +464,11 @@ fun ResultsBreakdownSection(finalResult: Int, diceModifierResult: Int) {
             Row() {
                 Text(text =
                 if (diceModifierResult < 0 ) {
-                    "$finalResult: <D1> + <D2> + <D3> $diceModifierResult"
+                    val diceModifierResultAbsolute = abs(diceModifierResult)
+                    "$finalResult: <D1> + <D2> + <D3> - $diceModifierResultAbsolute"
                 } else {
                     "$finalResult: <D1> + <D2> + <D3> + $diceModifierResult"
-                }
-                )
+                })
             }
         }
     }

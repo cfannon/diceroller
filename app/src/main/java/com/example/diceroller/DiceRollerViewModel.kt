@@ -1,5 +1,6 @@
 package com.example.diceroller
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,6 +32,8 @@ class DiceRollerViewModel : ViewModel() {
     private val _finalResult = MutableStateFlow(0)
     val finalResult = _finalResult.asStateFlow()
 
+    private var resultsBreakdown = ""
+
     fun onDiceSelectionClick(selectedDiceValue: Int) {
         _diceValue.update { selectedDiceValue }
     }
@@ -38,17 +41,31 @@ class DiceRollerViewModel : ViewModel() {
     fun onDiceRollClick() {
         // Final Result = Selected Dice Value Roll + (Selected Dice Value per Dice Quantity) + Dice Modifier
         var diceRollTotal = 0
+        resultsBreakdown = ""
         for (i in 1..diceQuantity.value) {
-            diceRollTotal += generator.rollDice(diceValue.value)
+            val currentRoll = generator.rollDice(diceValue.value)
+            diceRollTotal += currentRoll
+            if (resultsBreakdown.isBlank()) {
+                resultsBreakdown = "$currentRoll"
+            } else {
+                resultsBreakdown += " + $currentRoll"
+            }
+
+            Log.d("DiceRoller", resultsBreakdown)
         }
 
         if (diceModifier.value < 0) {
-            _diceRollPlusModifier.update {"$diceRollTotal ${diceModifier.value}"}
+            val diceModifierAbsolute = abs(diceModifier.value)
+            _diceRollPlusModifier.update {"$diceRollTotal - $diceModifierAbsolute"}
+            resultsBreakdown = "$resultsBreakdown - $diceModifierAbsolute"
         } else {
             _diceRollPlusModifier.update {"$diceRollTotal + ${diceModifier.value}"}
+            resultsBreakdown = "$resultsBreakdown + ${diceModifier.value}"
         }
         _diceModifierResult.update { diceModifier.value }
         _finalResult.update { diceRollTotal + diceModifier.value }
+
+        Log.d("DiceRoller", resultsBreakdown)
     }
 
     fun onDiceQuantityDownClick() {
@@ -75,5 +92,11 @@ class DiceRollerViewModel : ViewModel() {
         _diceRollResult.update { 0 }
         _diceRollPlusModifier.update { "0 + 0"}
         _finalResult.update { 0 }
+        resultsBreakdown = ""
     }
+
+    private fun resultsBreakdown() {
+
+    }
+
 }
