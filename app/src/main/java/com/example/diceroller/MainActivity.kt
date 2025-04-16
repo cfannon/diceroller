@@ -66,11 +66,9 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
 
         val diceValue by viewModel.diceValue.collectAsState()
         val diceQuantity by viewModel.diceQuantity.collectAsState()
-        val diceModifier by viewModel.diceModifier.collectAsState()
         val diceModifierResult by viewModel.diceModifierResult.collectAsState()
 
         val diceRollPlusModifier by viewModel.diceRollPlusModifier.collectAsState()
-        val diceRollResult by viewModel.diceRollResult.collectAsState()
         val finalResult by viewModel.finalResult.collectAsState()
         val finalResultsBreakdown by viewModel.finalResultsBreakdown.collectAsState()
 
@@ -89,7 +87,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
             diceQuantity = diceQuantity,
             onDiceModifierDownClick = viewModel::onDiceModifierDownClick,
             onDiceModifierUpClick = viewModel::onDiceModifierUpClick,
-            diceModifier = diceModifier,
+            diceModifierResult = diceModifierResult,
             onResetClick = viewModel::onResetClick
         )
 
@@ -100,7 +98,6 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
                 Toast.makeText(context, "Please select a dice before rolling.", Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.onDiceRollClick()
-                Toast.makeText(context, "Roll Result : $diceRollResult", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -269,7 +266,7 @@ fun ModifierButtons(
     diceQuantity: Int,
     onDiceModifierDownClick: () -> Unit,
     onDiceModifierUpClick: () -> Unit,
-    diceModifier: Int,
+    diceModifierResult: String,
     onResetClick: () -> Unit
 ) {
 
@@ -352,13 +349,7 @@ fun ModifierButtons(
                 }
 
                 Text(
-                    text =
-                        if (diceModifier < 0 ) {
-                            val diceModifierAbsolute = abs(diceModifier)
-                            "- $diceModifierAbsolute"
-                        } else {
-                            "+ $diceModifier"
-                        },
+                    text = diceModifierResult,
                     Modifier
                         .width(50.dp),
                     textAlign = TextAlign.Center,

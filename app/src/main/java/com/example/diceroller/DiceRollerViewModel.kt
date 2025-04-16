@@ -20,11 +20,10 @@ class DiceRollerViewModel : ViewModel() {
     private val _diceModifier = MutableStateFlow(0)
     val diceModifier = _diceModifier.asStateFlow()
 
-    private val _diceModifierResult = MutableStateFlow(0)
-    val diceModifierResult = _diceModifierResult.asStateFlow()
+    private var diceModifierAbsolute = abs(diceModifier.value)
 
-    private val _diceRollResult = MutableStateFlow(0)
-    val diceRollResult = _diceRollResult.asStateFlow()
+    private val _diceModifierResult = MutableStateFlow("+ $diceModifierAbsolute")
+    val diceModifierResult = _diceModifierResult.asStateFlow()
 
     private val _diceRollPlusModifier = MutableStateFlow("0 + 0")
     val diceRollPlusModifier = _diceRollPlusModifier.asStateFlow()
@@ -56,14 +55,12 @@ class DiceRollerViewModel : ViewModel() {
         }
 
         if (diceModifier.value < 0) {
-            val diceModifierAbsolute = abs(diceModifier.value)
             _diceRollPlusModifier.update {"$diceRollTotal - $diceModifierAbsolute"}
             resultsBreakdown = "$resultsBreakdown - $diceModifierAbsolute"
         } else {
             _diceRollPlusModifier.update {"$diceRollTotal + ${diceModifier.value}"}
             resultsBreakdown = "$resultsBreakdown + ${diceModifier.value}"
         }
-        _diceModifierResult.update { diceModifier.value }
         _finalResult.update { diceRollTotal + diceModifier.value }
         _finalResultsBreakdown.update { "${finalResult.value} : $resultsBreakdown" }
 
@@ -80,18 +77,31 @@ class DiceRollerViewModel : ViewModel() {
 
     fun onDiceModifierDownClick() {
         _diceModifier.update { it-1 }
+        diceModifierAbsolute = abs(diceModifier.value)
+        if (diceModifier.value < 0) {
+            _diceModifierResult.update { "- $diceModifierAbsolute" }
+        } else {
+            _diceModifierResult.update { "+ $diceModifierAbsolute" }
+        }
+        Log.d("DiceModifierAbsolute", "$diceModifierAbsolute")
     }
 
     fun onDiceModifierUpClick() {
         _diceModifier.update { it+1 }
+        diceModifierAbsolute = abs(diceModifier.value)
+        if (diceModifier.value < 0) {
+            _diceModifierResult.update { "- $diceModifierAbsolute" }
+        } else {
+            _diceModifierResult.update { "+ $diceModifierAbsolute" }
+        }
+        Log.d("DiceModifierAbsolute", "$diceModifierAbsolute")
     }
 
     fun onResetClick() {
         _diceValue.update { 0 }
         _diceQuantity.update { 1 }
         _diceModifier.update { 0 }
-        _diceModifierResult.update { 0 }
-        _diceRollResult.update { 0 }
+        _diceModifierResult.update { "+ 0" }
         _diceRollPlusModifier.update { "0 + 0"}
         _finalResult.update { 0 }
         resultsBreakdown = ""
