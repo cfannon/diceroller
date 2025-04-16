@@ -33,13 +33,14 @@ class DiceRollerViewModel : ViewModel() {
     val finalResult = _finalResult.asStateFlow()
 
     private var resultsBreakdown = ""
+    private val _finalResultsBreakdown = MutableStateFlow(resultsBreakdown)
+    val finalResultsBreakdown = _finalResultsBreakdown.asStateFlow()
 
     fun onDiceSelectionClick(selectedDiceValue: Int) {
         _diceValue.update { selectedDiceValue }
     }
 
     fun onDiceRollClick() {
-        // Final Result = Selected Dice Value Roll + (Selected Dice Value per Dice Quantity) + Dice Modifier
         var diceRollTotal = 0
         resultsBreakdown = ""
         for (i in 1..diceQuantity.value) {
@@ -51,7 +52,7 @@ class DiceRollerViewModel : ViewModel() {
                 resultsBreakdown += " + $currentRoll"
             }
 
-            Log.d("DiceRoller", resultsBreakdown)
+            Log.d("ResultsBreakdown", resultsBreakdown)
         }
 
         if (diceModifier.value < 0) {
@@ -64,8 +65,9 @@ class DiceRollerViewModel : ViewModel() {
         }
         _diceModifierResult.update { diceModifier.value }
         _finalResult.update { diceRollTotal + diceModifier.value }
+        _finalResultsBreakdown.update { "${finalResult.value} : $resultsBreakdown" }
 
-        Log.d("DiceRoller", resultsBreakdown)
+        Log.d("ResultsBreakdown", resultsBreakdown)
     }
 
     fun onDiceQuantityDownClick() {
@@ -93,10 +95,6 @@ class DiceRollerViewModel : ViewModel() {
         _diceRollPlusModifier.update { "0 + 0"}
         _finalResult.update { 0 }
         resultsBreakdown = ""
-    }
-
-    private fun resultsBreakdown() {
-
     }
 
 }

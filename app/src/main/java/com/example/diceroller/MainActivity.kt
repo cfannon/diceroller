@@ -56,7 +56,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DiceRollerApp(viewModel: DiceRollerViewModel = DiceRollerViewModel()) {
     DiceRollerLayout(viewModel = viewModel)
-
 }
 
 @Composable
@@ -73,6 +72,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
         val diceRollPlusModifier by viewModel.diceRollPlusModifier.collectAsState()
         val diceRollResult by viewModel.diceRollResult.collectAsState()
         val finalResult by viewModel.finalResult.collectAsState()
+        val finalResultsBreakdown by viewModel.finalResultsBreakdown.collectAsState()
 
         HeaderSection()
 
@@ -110,7 +110,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsBreakdownSection(finalResult = finalResult, diceModifierResult = diceModifierResult)
+        ResultsBreakdownSection(finalResultsBreakdown = finalResultsBreakdown)
     }
 }
 
@@ -353,7 +353,6 @@ fun ModifierButtons(
 
                 Text(
                     text =
-                        // Is there a better way to do this, to show dice modifier as a negative number?
                         if (diceModifier < 0 ) {
                             val diceModifierAbsolute = abs(diceModifier)
                             "- $diceModifierAbsolute"
@@ -446,7 +445,7 @@ fun ResultsSection(finalResult: Int, diceRollPlusModifier: String) {
 }
 
 @Composable
-fun ResultsBreakdownSection(finalResult: Int, diceModifierResult: Int) {
+fun ResultsBreakdownSection(finalResultsBreakdown: String) {
     Row(
         Modifier
             .fillMaxWidth(),
@@ -462,13 +461,7 @@ fun ResultsBreakdownSection(finalResult: Int, diceModifierResult: Int) {
                 Text(text = "Results Breakdown:")
             }
             Row() {
-                Text(text =
-                if (diceModifierResult < 0 ) {
-                    val diceModifierResultAbsolute = abs(diceModifierResult)
-                    "$finalResult: <D1> + <D2> + <D3> - $diceModifierResultAbsolute"
-                } else {
-                    "$finalResult: <D1> + <D2> + <D3> + $diceModifierResult"
-                })
+                Text(text = finalResultsBreakdown)
             }
         }
     }
