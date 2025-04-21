@@ -63,14 +63,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
     Column (modifier.fillMaxHeight()) {
 
         val context = LocalContext.current
-
-        val diceValue by viewModel.diceValue.collectAsState()
-        val diceQuantity by viewModel.diceQuantity.collectAsState()
-        val diceModifierResult by viewModel.diceModifierResult.collectAsState()
-
-        val diceRollPlusModifier by viewModel.diceRollPlusModifier.collectAsState()
-        val finalResult by viewModel.finalResult.collectAsState()
-        val finalResultsBreakdown by viewModel.finalResultsBreakdown.collectAsState()
+        val uiState by viewModel.uiState.collectAsState()
 
         HeaderSection()
 
@@ -84,17 +77,17 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
         ModifierButtons(
             onDiceQuantityDownClick = viewModel::onDiceQuantityDownClick,
             onDiceQuantityUpClick = viewModel::onDiceQuantityUpClick,
-            diceQuantity = diceQuantity,
+            diceQuantity = uiState.diceQuantity,
             onDiceModifierDownClick = viewModel::onDiceModifierDownClick,
             onDiceModifierUpClick = viewModel::onDiceModifierUpClick,
-            diceModifierResult = diceModifierResult,
+            diceModifierResult = uiState.diceModifierResult,
             onResetClick = viewModel::onResetClick
         )
 
         Spacer(modifier = Modifier.height(10.dp))
 
         PrimaryRollButton {
-            if (diceValue == 0) {
+            if (uiState.diceValue == 0) {
                 Toast.makeText(context, "Please select a dice before rolling.", Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.onDiceRollClick()
@@ -103,11 +96,11 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsSection(finalResult = finalResult, diceRollPlusModifier = diceRollPlusModifier)
+        ResultsSection(finalResult = uiState.finalResult, diceRollPlusModifier = uiState.diceRollPlusModifier)
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsBreakdownSection(finalResultsBreakdown = finalResultsBreakdown)
+        ResultsBreakdownSection(finalResultsBreakdown = uiState.finalResultsBreakdown)
     }
 }
 

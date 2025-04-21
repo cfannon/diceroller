@@ -7,44 +7,39 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.math.abs
 
+data class UiState(
+    val diceValue: Int = 0,
+    val diceQuantity: Int = 1,
+    val diceModifier: Int = 0,
+    var diceModifierResult: String = "+ 0",
+    val diceRollPlusModifier: String = "0 + 0",
+    val finalResult: Int = 0,
+    val finalResultsBreakdown: String = ""
+)
+
 class DiceRollerViewModel : ViewModel() {
+
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState = _uiState.asStateFlow()
 
     private val generator = TestNumberGenerator()
 
-    private val _diceValue = MutableStateFlow(0)
-    val diceValue = _diceValue.asStateFlow()
-
-    private val _diceQuantity = MutableStateFlow(1)
-    val diceQuantity = _diceQuantity.asStateFlow()
-
-    private val _diceModifier = MutableStateFlow(0)
-    val diceModifier = _diceModifier.asStateFlow()
-
     private val diceModifierAbsolute
-        get() = abs(diceModifier.value)
-
-    private val _diceModifierResult = MutableStateFlow("+ $diceModifierAbsolute")
-    val diceModifierResult = _diceModifierResult.asStateFlow()
-
-    private val _diceRollPlusModifier = MutableStateFlow("0 + 0")
-    val diceRollPlusModifier = _diceRollPlusModifier.asStateFlow()
-
-    private val _finalResult = MutableStateFlow(0)
-    val finalResult = _finalResult.asStateFlow()
+        get() = abs(_uiState.value.diceModifier)
 
     private var resultsBreakdown = ""
-    private val _finalResultsBreakdown = MutableStateFlow(resultsBreakdown)
-    val finalResultsBreakdown = _finalResultsBreakdown.asStateFlow()
 
     fun onDiceSelectionClick(selectedDiceValue: Int) {
-        _diceValue.update { selectedDiceValue }
+        _uiState.update {
+            it.copy(diceValue = selectedDiceValue)
+        }
     }
 
-    fun onDiceRollClick() {
+    fun onDiceRollClick() = _uiState.update { currentState ->
         var diceRollTotal = 0
         resultsBreakdown = ""
-        for (i in 1..diceQuantity.value) {
-            val currentRoll = generator.rollDice(diceValue.value)
+        for (i in 1..currentState.diceQuantity) {
+            val currentRoll = generator.rollDice(currentState.diceValue)
             diceRollTotal += currentRoll
             if (resultsBreakdown.isBlank()) {
                 resultsBreakdown = "$currentRoll"
@@ -55,54 +50,67 @@ class DiceRollerViewModel : ViewModel() {
             Log.d("ResultsBreakdown", resultsBreakdown)
         }
 
-        if (diceModifier.value < 0) {
-            _diceRollPlusModifier.update {"$diceRollTotal - $diceModifierAbsolute"}
+        val diceRollPlusModifierUpdate : String
+        if (currentState.diceModifier < 0) {
+            diceRollPlusModifierUpdate = "$diceRollTotal - $diceModifierAbsolute"
             resultsBreakdown = "$resultsBreakdown - $diceModifierAbsolute"
         } else {
-            _diceRollPlusModifier.update {"$diceRollTotal + ${diceModifier.value}"}
-            resultsBreakdown = "$resultsBreakdown + ${diceModifier.value}"
+            diceRollPlusModifierUpdate = "$diceRollTotal + ${currentState.diceModifier}"
+            resultsBreakdown = "$resultsBreakdown + ${currentState.diceModifier}"
         }
-        _finalResult.update { diceRollTotal + diceModifier.value }
-        _finalResultsBreakdown.update { "${finalResult.value} : $resultsBreakdown" }
+        val finalResultUpdate = diceRollTotal + currentState.diceModifier
+        val finalResultsBreakdownUpdate = "$finalResultUpdate : $resultsBreakdown"
 
         Log.d("ResultsBreakdown", resultsBreakdown)
+        currentState.copy(
+            diceRollPlusModifier = diceRollPlusModifierUpdate,
+            finalResult = finalResultUpdate,
+            finalResultsBreakdown = finalResultsBreakdownUpdate
+        )
     }
 
     fun onDiceQuantityDownClick() {
-        _diceQuantity.update { if (it > 1) it-1 else 1 }
+        _uiState.update {
+            val diceQuantityCurrent = it.diceQuantity
+            val diceQuantityUpdate = if (diceQuantityCurrent > 1) diceQuantityCurrent-1 else 1
+            it.copy(diceQuantity = diceQuantityUpdate)
+        }
     }
 
     fun onDiceQuantityUpClick() {
-        _diceQuantity.update { it+1 }
+        _uiState.update {
+            it.copy(diceQuantity = it.diceQuantity+1)
+        }
     }
 
     fun onDiceModifierDownClick() {
-        if (diceModifier.value < 0) {
-            _diceModifierResult.update { "- $diceModifierAbsolute" }
-        } else {
-            _diceModifierResult.update { "+ $diceModifierAbsolute" }
+        _uiState.update {
+            val diceModifierUpdate = it.diceModifier-1
+            val diceModifierResultUpdate =
+                if (diceModifierUpdate < 0) {
+                    "- ${abs(diceModifierUpdate)}"
+                } else {
+                    "+ ${abs(diceModifierUpdate)}"
+                }
+            it.copy(diceModifier = diceModifierUpdate, diceModifierResult = diceModifierResultUpdate)
         }
-        Log.d("DiceModifierAbsolute", "$diceModifierAbsolute")
     }
 
     fun onDiceModifierUpClick() {
-        _diceModifier.update { it+1 }
-        if (diceModifier.value < 0) {
-            _diceModifierResult.update { "- $diceModifierAbsolute" }
-        } else {
-            _diceModifierResult.update { "+ $diceModifierAbsolute" }
+        _uiState.update {
+            val diceModifierUpdate = it.diceModifier+1
+            val diceModifierResultUpdate =
+                if (diceModifierUpdate < 0) {
+                    "- ${abs(diceModifierUpdate)}"
+                } else {
+                    "+ ${abs(diceModifierUpdate)}"
+                }
+            it.copy(diceModifier = diceModifierUpdate, diceModifierResult = diceModifierResultUpdate)
         }
-        Log.d("DiceModifierAbsolute", "$diceModifierAbsolute")
     }
 
     fun onResetClick() {
-        _diceValue.update { 0 }
-        _diceQuantity.update { 1 }
-        _diceModifier.update { 0 }
-        _diceModifierResult.update { "+ 0" }
-        _diceRollPlusModifier.update { "0 + 0 "}
-        _finalResult.update { 0 }
-        _finalResultsBreakdown.update { "" }
+        _uiState.update { UiState() }
         resultsBreakdown = ""
     }
 
