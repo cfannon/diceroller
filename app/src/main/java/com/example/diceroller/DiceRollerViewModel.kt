@@ -20,7 +20,8 @@ class DiceRollerViewModel : ViewModel() {
     private val _diceModifier = MutableStateFlow(0)
     val diceModifier = _diceModifier.asStateFlow()
 
-    private var diceModifierAbsolute = abs(diceModifier.value)
+    private val diceModifierAbsolute
+        get() = abs(diceModifier.value)
 
     private val _diceModifierResult = MutableStateFlow("+ $diceModifierAbsolute")
     val diceModifierResult = _diceModifierResult.asStateFlow()
@@ -76,8 +77,6 @@ class DiceRollerViewModel : ViewModel() {
     }
 
     fun onDiceModifierDownClick() {
-        _diceModifier.update { it-1 }
-        diceModifierAbsolute = abs(diceModifier.value)
         if (diceModifier.value < 0) {
             _diceModifierResult.update { "- $diceModifierAbsolute" }
         } else {
@@ -88,7 +87,6 @@ class DiceRollerViewModel : ViewModel() {
 
     fun onDiceModifierUpClick() {
         _diceModifier.update { it+1 }
-        diceModifierAbsolute = abs(diceModifier.value)
         if (diceModifier.value < 0) {
             _diceModifierResult.update { "- $diceModifierAbsolute" }
         } else {
@@ -102,7 +100,7 @@ class DiceRollerViewModel : ViewModel() {
         _diceQuantity.update { 1 }
         _diceModifier.update { 0 }
         _diceModifierResult.update { "+ 0" }
-        _diceRollPlusModifier.update { "0 + 0"}
+        _diceRollPlusModifier.update { "0 + 0 "}
         _finalResult.update { 0 }
         _finalResultsBreakdown.update { "" }
         resultsBreakdown = ""
