@@ -96,7 +96,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        ResultsSection(finalResult = uiState.finalResult, diceRollPlusModifier = uiState.diceRollPlusModifier)
+        ResultsSection(finalResult = uiState.finalResult, finalResultColor = uiState.finalResultColor, diceRollPlusModifier = uiState.diceRollPlusModifier)
 
         Spacer(modifier = Modifier.height(25.dp))
 
@@ -405,7 +405,7 @@ fun PrimaryRollButton(onClick: () -> Unit) {
 }
 
 @Composable
-fun ResultsSection(finalResult: Int, diceRollPlusModifier: String) {
+fun ResultsSection(finalResult: String, finalResultColor: Color, diceRollPlusModifier: String) {
     Row (
         Modifier
             .fillMaxWidth(),
@@ -417,7 +417,8 @@ fun ResultsSection(finalResult: Int, diceRollPlusModifier: String) {
             horizontalAlignment = Alignment.CenterHorizontally) {
 
             Text(
-                text = "$finalResult",
+                text = finalResult,
+                color = finalResultColor,
                 fontSize = 80.sp
             )
             Text(

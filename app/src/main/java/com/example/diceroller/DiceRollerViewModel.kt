@@ -1,6 +1,7 @@
 package com.example.diceroller
 
 import android.util.Log
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +14,8 @@ data class UiState(
     val diceModifier: Int = 0,
     var diceModifierResult: String = "+ 0",
     val diceRollPlusModifier: String = "0 + 0",
-    val finalResult: Int = 0,
+    val finalResult: String = "0",
+    var finalResultColor: Color = Color.Black,
     val finalResultsBreakdown: String = ""
 )
 
@@ -50,6 +52,17 @@ class DiceRollerViewModel : ViewModel() {
             Log.d("ResultsBreakdown", resultsBreakdown)
         }
 
+        val diceMinValue = 1
+        val diceMaxValue = currentState.diceValue
+
+        if (diceRollTotal == diceMaxValue) {
+            currentState.finalResultColor = Color.Green
+        } else if (diceRollTotal == diceMinValue) {
+            currentState.finalResultColor = Color.Red
+        } else {
+            currentState.finalResultColor = Color.Black
+        }
+
         val diceRollPlusModifierUpdate : String
         if (currentState.diceModifier < 0) {
             diceRollPlusModifierUpdate = "$diceRollTotal - $diceModifierAbsolute"
@@ -59,12 +72,13 @@ class DiceRollerViewModel : ViewModel() {
             resultsBreakdown = "$resultsBreakdown + ${currentState.diceModifier}"
         }
         val finalResultUpdate = diceRollTotal + currentState.diceModifier
+        val finalResultValue = "$finalResultUpdate"
         val finalResultsBreakdownUpdate = "$finalResultUpdate : $resultsBreakdown"
 
         Log.d("ResultsBreakdown", resultsBreakdown)
         currentState.copy(
             diceRollPlusModifier = diceRollPlusModifierUpdate,
-            finalResult = finalResultUpdate,
+            finalResult = finalResultValue,
             finalResultsBreakdown = finalResultsBreakdownUpdate
         )
     }
