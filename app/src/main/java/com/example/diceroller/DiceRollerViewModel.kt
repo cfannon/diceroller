@@ -52,15 +52,19 @@ class DiceRollerViewModel : ViewModel() {
             Log.d("ResultsBreakdown", resultsBreakdown)
         }
 
-        val diceMinValue = 1
-        val diceMaxValue = currentState.diceValue
-
-        if (diceRollTotal == diceMaxValue) {
-            currentState.finalResultColor = Color.Green
-        } else if (diceRollTotal == diceMinValue) {
-            currentState.finalResultColor = Color.Red
-        } else {
-            currentState.finalResultColor = Color.Black
+        // Changes FinalResultColor if minimum or maximum value is rolled
+        val diceMinValue = currentState.diceQuantity * 1
+        val diceMaxValue = currentState.diceQuantity * currentState.diceValue
+        when (diceRollTotal) {
+            diceMaxValue -> {
+                currentState.finalResultColor = Color.Green
+            }
+            diceMinValue -> {
+                currentState.finalResultColor = Color.Red
+            }
+            else -> {
+                currentState.finalResultColor = Color.Black
+            }
         }
 
         val diceRollPlusModifierUpdate : String
