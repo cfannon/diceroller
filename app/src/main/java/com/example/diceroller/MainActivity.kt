@@ -132,7 +132,7 @@ fun Subtitle() {
 }
 
 @Composable
-fun DiceSelection(onClick: (Int) -> Unit) {
+fun DiceSelection(onClick: (DiceValue) -> Unit) {
     // Dice Selection Buttons - "d2", "d4", "d6", "d8"
     Row (
         Modifier
@@ -140,59 +140,19 @@ fun DiceSelection(onClick: (Int) -> Unit) {
             .padding(top = 10.dp, bottom = 5.dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        Button(
-            onClick = { onClick(2) },
-            shape = RectangleShape,
-            modifier = Modifier
-                .height(70.dp)
-                .width(70.dp)
-        ) {
-            Text(
-                text = "d2",
-            )
-        }
+        DiceSelectionButton(diceValue = DiceValue.D2, onClick = { DiceValue.D2 } )
 
         Spacer(modifier = Modifier.width(10.dp))
 
-        Button(
-            onClick = { onClick(4) },
-            shape = RectangleShape,
-            modifier = Modifier
-                .height(70.dp)
-                .width(70.dp)
-        ) {
-            Text(
-                text = "d4"
-            )
-        }
+        DiceSelectionButton(diceValue = DiceValue.D4, onClick = { DiceValue.D4 } )
 
         Spacer(modifier = Modifier.width(10.dp))
 
-        Button(
-            onClick = { onClick(6) },
-            shape = RectangleShape,
-            modifier = Modifier
-                .height(70.dp)
-                .width(70.dp)
-        ) {
-            Text(
-                text = "d6"
-            )
-        }
+        DiceSelectionButton(diceValue = DiceValue.D6, onClick = { DiceValue.D6 } )
 
         Spacer(modifier = Modifier.width(10.dp))
 
-        Button(
-            onClick = { onClick(8) },
-            shape = RectangleShape,
-            modifier = Modifier
-                .height(70.dp)
-                .width(70.dp)
-        ) {
-            Text(
-                text = "d8"
-            )
-        }
+        DiceSelectionButton(diceValue = DiceValue.D8, onClick = { DiceValue.D8 } )
     }
 
     // Dice Selection Buttons - "d10", "d12", "d20", "d100"
@@ -202,53 +162,19 @@ fun DiceSelection(onClick: (Int) -> Unit) {
             .padding(top = 5.dp, bottom = 5.dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        Button(
-            onClick = { onClick(10) },
-            shape = RectangleShape,
-            modifier = Modifier
-                .height(70.dp)
-                .width(70.dp)
-        ) {
-            Text(text = "d10")
-        }
+        DiceSelectionButton(diceValue = DiceValue.D10, onClick = { DiceValue.D10 } )
 
         Spacer(modifier = Modifier.width(10.dp))
 
-        Button(
-            onClick = { onClick(12) },
-            shape = RectangleShape,
-            modifier = Modifier
-                .height(70.dp)
-                .width(70.dp)
-        ) {
-            Text(
-                text = "d12"
-            )
-        }
+        DiceSelectionButton(diceValue = DiceValue.D12, onClick = { DiceValue.D12 } )
 
         Spacer(modifier = Modifier.width(10.dp))
 
-        Button(
-            onClick = { onClick(20) },
-            shape = RectangleShape,
-            modifier = Modifier
-                .height(70.dp)
-                .width(70.dp)
-        ) {
-            Text(text = "d20")
-        }
+        DiceSelectionButton(diceValue = DiceValue.D20, onClick = { DiceValue.D20 } )
 
         Spacer(modifier = Modifier.width(10.dp))
 
-        Button(
-            onClick = { onClick(100) },
-            shape = RectangleShape,
-            modifier = Modifier
-                .height(70.dp)
-                .width(70.dp)
-        ) {
-            Text(text = "d100")
-        }
+        DiceSelectionButton(diceValue = DiceValue.D100, onClick = { DiceValue.D100 } )
     }
 }
 

@@ -31,7 +31,7 @@ class DiceRollerViewModel : ViewModel() {
 
     private var resultsBreakdown = ""
 
-    fun onDiceSelectionClick(selectedDiceValue: Int) {
+    fun onDiceSelectionClick(selectedDiceValue: DiceValue) {
         _uiState.update {
             it.copy(diceValue = selectedDiceValue)
         }

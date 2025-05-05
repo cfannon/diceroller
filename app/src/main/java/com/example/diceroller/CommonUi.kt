@@ -23,13 +23,12 @@ enum class DiceValue(val drawableResource: Int, val label: String) {
 
 @Composable
 fun DiceSelectionButton(diceValue: DiceValue, onClick: (DiceValue) -> Unit) {
-    IconButton(onClick = { onClick(diceValue)}) {
+    IconButton(onClick = { onClick(diceValue) }) {
         Icon(painter =
         painterResource(diceValue.drawableResource),
             contentDescription = diceValue.label,
             modifier = Modifier
-                .size(50.dp)
-
+                .size(70.dp)
         )
     }
 }
