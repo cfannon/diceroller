@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -141,14 +143,21 @@ fun DiceSelection(onClick: (DiceValue) -> Unit) {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         val equalWidthModifier = Modifier.weight(1f)
+        val values = DiceValue.entries.toTypedArray()
+        for (diceValue in values) {
+            DiceSelectionButton(
+                equalWidthModifier,
+                diceValue = diceValue
+            ) { onClick(diceValue) }
+        }
 
-        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D2) { onClick(DiceValue.D2) }
-
-        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D4) { onClick(DiceValue.D4) }
-
-        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D6) { onClick(DiceValue.D6) }
-
-        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D8) { onClick(DiceValue.D8) }
+//        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D2) { onClick(DiceValue.D2) }
+//
+//        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D4) { onClick(DiceValue.D4) }
+//
+//        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D6) { onClick(DiceValue.D6) }
+//
+//        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D8) { onClick(DiceValue.D8) }
     }
 
     // Dice Selection Buttons - "d10", "d12", "d20", "d100"
