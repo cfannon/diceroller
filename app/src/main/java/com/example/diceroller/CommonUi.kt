@@ -1,6 +1,10 @@
 package com.example.diceroller
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -10,25 +14,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.diceroller.ui.theme.DiceRollerTheme
 
-enum class DiceValue(val drawableResource: Int, val label: String) {
-    D2(R.drawable.d2, "d2"),
-    D4(R.drawable.d4, "d4"),
-    D6(R.drawable.d6,"d6"),
-    D8(R.drawable.d8, "d8"),
-    D10(R.drawable.d10, "d10"),
-    D12(R.drawable.d12, "d12"),
-    D20(R.drawable.d20, "d20"),
-    D100(R.drawable.d20, "d100")
+enum class DiceValue(val selectedValue: Int, val drawableResource: Int, val label: String) {
+    D2(2, R.drawable.d2, "d2"),
+    D4(4, R.drawable.d4, "d4"),
+    D6(6, R.drawable.d6,"d6"),
+    D8(8, R.drawable.d8, "d8"),
+    D10(10, R.drawable.d10, "d10"),
+    D12(12, R.drawable.d12, "d12"),
+    D20(20, R.drawable.d20, "d20"),
+    D100(100, R.drawable.d10, "d100")
 }
 
 @Composable
-fun DiceSelectionButton(diceValue: DiceValue, onClick: (DiceValue) -> Unit) {
-    IconButton(onClick = { onClick(diceValue) }) {
-        Icon(painter =
-        painterResource(diceValue.drawableResource),
+fun DiceSelectionButton(modifier: Modifier = Modifier, diceValue: DiceValue, onClick: (DiceValue) -> Unit) {
+
+    Button(modifier = modifier, onClick = { onClick(diceValue) }) {
+        Image(
+            painter = painterResource(diceValue.drawableResource),
             contentDescription = diceValue.label,
-            modifier = Modifier
-                .size(70.dp)
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -37,7 +41,7 @@ fun DiceSelectionButton(diceValue: DiceValue, onClick: (DiceValue) -> Unit) {
 @Composable
 fun DiceSelectionPreview() {
     DiceRollerTheme {
-        DiceSelectionButton(DiceValue.D20) {
+        DiceSelectionButton(Modifier, DiceValue.D20) {
         }
     }
 }

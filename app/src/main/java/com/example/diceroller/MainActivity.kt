@@ -137,44 +137,36 @@ fun DiceSelection(onClick: (DiceValue) -> Unit) {
     Row (
         Modifier
             .fillMaxWidth()
-            .padding(top = 10.dp, bottom = 5.dp),
-        horizontalArrangement = Arrangement.Center
+            .padding(top = 8.dp, bottom = 4.dp, start = 16.dp, end = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        DiceSelectionButton(diceValue = DiceValue.D2, onClick = { DiceValue.D2 } )
+        val equalWidthModifier = Modifier.weight(1f)
 
-        Spacer(modifier = Modifier.width(10.dp))
+        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D2) { onClick(DiceValue.D2) }
 
-        DiceSelectionButton(diceValue = DiceValue.D4, onClick = { DiceValue.D4 } )
+        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D4) { onClick(DiceValue.D4) }
 
-        Spacer(modifier = Modifier.width(10.dp))
+        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D6) { onClick(DiceValue.D6) }
 
-        DiceSelectionButton(diceValue = DiceValue.D6, onClick = { DiceValue.D6 } )
-
-        Spacer(modifier = Modifier.width(10.dp))
-
-        DiceSelectionButton(diceValue = DiceValue.D8, onClick = { DiceValue.D8 } )
+        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D8) { onClick(DiceValue.D8) }
     }
 
     // Dice Selection Buttons - "d10", "d12", "d20", "d100"
     Row (
         Modifier
             .fillMaxWidth()
-            .padding(top = 5.dp, bottom = 5.dp),
-        horizontalArrangement = Arrangement.Center
+            .padding(top = 8.dp, bottom = 4.dp, start = 16.dp, end = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        DiceSelectionButton(diceValue = DiceValue.D10, onClick = { DiceValue.D10 } )
+        val equalWidthModifier = Modifier.weight(1f)
 
-        Spacer(modifier = Modifier.width(10.dp))
+        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D10) { onClick(DiceValue.D10) }
 
-        DiceSelectionButton(diceValue = DiceValue.D12, onClick = { DiceValue.D12 } )
+        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D12) { onClick(DiceValue.D12) }
 
-        Spacer(modifier = Modifier.width(10.dp))
+        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D20) { onClick(DiceValue.D20) }
 
-        DiceSelectionButton(diceValue = DiceValue.D20, onClick = { DiceValue.D20 } )
-
-        Spacer(modifier = Modifier.width(10.dp))
-
-        DiceSelectionButton(diceValue = DiceValue.D100, onClick = { DiceValue.D100 } )
+        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D100) { onClick(DiceValue.D100) }
     }
 }
 

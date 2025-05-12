@@ -33,7 +33,7 @@ class DiceRollerViewModel : ViewModel() {
 
     fun onDiceSelectionClick(selectedDiceValue: DiceValue) {
         _uiState.update {
-            it.copy(diceValue = selectedDiceValue)
+            it.copy(diceValue = selectedDiceValue.selectedValue)
         }
     }
 
