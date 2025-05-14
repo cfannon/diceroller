@@ -1,12 +1,11 @@
 package com.example.diceroller
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -34,6 +33,27 @@ fun DiceSelectionButton(modifier: Modifier = Modifier, diceValue: DiceValue, onC
             contentDescription = diceValue.label,
             modifier = Modifier.fillMaxWidth()
         )
+    }
+}
+
+@Composable
+fun DiceButtonRow (start: Int, finish: Int, onClick: (DiceValue) -> Unit) {
+    val values = DiceValue.entries.toTypedArray()
+
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, bottom = 4.dp, start = 16.dp, end = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        val equalWidthModifier = Modifier.weight(1f)
+        for (i in start until finish) {
+            val diceValue = values[i]
+            DiceSelectionButton(
+                equalWidthModifier,
+                diceValue = diceValue
+            ) { onClick(diceValue) }
+        }
     }
 }
 

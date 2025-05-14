@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.diceroller.ui.theme.DiceRollerTheme
-import kotlin.math.abs
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,48 +132,12 @@ fun Subtitle() {
 
 @Composable
 fun DiceSelection(onClick: (DiceValue) -> Unit) {
+    val values = DiceValue.entries.toTypedArray()
+    val middle = values.size / 2
+
     // Dice Selection Buttons - "d2", "d4", "d6", "d8"
-    Row (
-        Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 4.dp, start = 16.dp, end = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        val equalWidthModifier = Modifier.weight(1f)
-        val values = DiceValue.entries.toTypedArray()
-        for (diceValue in values) {
-            DiceSelectionButton(
-                equalWidthModifier,
-                diceValue = diceValue
-            ) { onClick(diceValue) }
-        }
-
-//        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D2) { onClick(DiceValue.D2) }
-//
-//        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D4) { onClick(DiceValue.D4) }
-//
-//        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D6) { onClick(DiceValue.D6) }
-//
-//        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D8) { onClick(DiceValue.D8) }
-    }
-
-    // Dice Selection Buttons - "d10", "d12", "d20", "d100"
-    Row (
-        Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 4.dp, start = 16.dp, end = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        val equalWidthModifier = Modifier.weight(1f)
-
-        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D10) { onClick(DiceValue.D10) }
-
-        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D12) { onClick(DiceValue.D12) }
-
-        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D20) { onClick(DiceValue.D20) }
-
-        DiceSelectionButton(equalWidthModifier, diceValue = DiceValue.D100) { onClick(DiceValue.D100) }
-    }
+    DiceButtonRow(start = 0, finish = middle, onClick = onClick)
+    DiceButtonRow(start = middle, finish = values.size, onClick = onClick)
 }
 
 @Composable
