@@ -137,6 +137,7 @@ fun DiceSelection(onClick: (DiceValue) -> Unit) {
 
     // Dice Selection Buttons - "d2", "d4", "d6", "d8"
     DiceButtonRow(start = 0, finish = middle, onClick = onClick)
+    // Dice Selection Buttons - "d10", "d12", "d20", "d100"
     DiceButtonRow(start = middle, finish = values.size, onClick = onClick)
 }
 
