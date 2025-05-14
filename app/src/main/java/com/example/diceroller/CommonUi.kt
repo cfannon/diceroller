@@ -1,11 +1,12 @@
 package com.example.diceroller
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -26,14 +27,13 @@ enum class DiceValue(val selectedValue: Int, val drawableResource: Int, val labe
 
 @Composable
 fun DiceSelectionButton(modifier: Modifier = Modifier, diceValue: DiceValue, onClick: (DiceValue) -> Unit) {
-
-    Button(modifier = modifier, onClick = { onClick(diceValue) }) {
-        Image(
-            painter = painterResource(diceValue.drawableResource),
-            contentDescription = diceValue.label,
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
+    Icon(
+        painter = painterResource(diceValue.drawableResource),
+        contentDescription = diceValue.label,
+        tint = MaterialTheme.colorScheme.primary,
+        modifier = modifier
+            .clickable { onClick(diceValue) }
+    )
 }
 
 @Composable
