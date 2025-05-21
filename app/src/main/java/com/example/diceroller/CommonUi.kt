@@ -26,18 +26,21 @@ enum class DiceValue(val selectedValue: Int, val drawableResource: Int, val labe
 }
 
 @Composable
-fun DiceSelectionButton(modifier: Modifier = Modifier, diceValue: DiceValue, onClick: (DiceValue) -> Unit) {
+fun DiceSelectionButton(modifier: Modifier = Modifier, diceValue: DiceValue, isSelected: Boolean, onClick: (DiceValue) -> Unit) {
+    val unselectedColor = MaterialTheme.colorScheme.primary
+    val selectedColor = MaterialTheme.colorScheme.secondary
+
     Icon(
         painter = painterResource(diceValue.drawableResource),
         contentDescription = diceValue.label,
-        tint = MaterialTheme.colorScheme.primary,
+        tint = if (isSelected) selectedColor else unselectedColor,
         modifier = modifier
             .clickable { onClick(diceValue) }
     )
 }
 
 @Composable
-fun DiceButtonRow (start: Int, finish: Int, onClick: (DiceValue) -> Unit) {
+fun DiceButtonRow (start: Int, finish: Int, selectedDiceValue: DiceValue?, onClick: (DiceValue) -> Unit) {
     val values = DiceValue.entries.toTypedArray()
 
     Row(
@@ -51,7 +54,8 @@ fun DiceButtonRow (start: Int, finish: Int, onClick: (DiceValue) -> Unit) {
             val diceValue = values[i]
             DiceSelectionButton(
                 equalWidthModifier,
-                diceValue = diceValue
+                diceValue = diceValue,
+                isSelected = selectedDiceValue == diceValue
             ) { onClick(diceValue) }
         }
     }
@@ -61,7 +65,7 @@ fun DiceButtonRow (start: Int, finish: Int, onClick: (DiceValue) -> Unit) {
 @Composable
 fun DiceSelectionPreview() {
     DiceRollerTheme {
-        DiceSelectionButton(Modifier, DiceValue.D20) {
+        DiceSelectionButton(Modifier, DiceValue.D20, false) {
         }
     }
 }

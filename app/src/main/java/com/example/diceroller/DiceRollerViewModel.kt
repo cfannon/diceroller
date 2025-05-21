@@ -9,14 +9,14 @@ import kotlinx.coroutines.flow.update
 import kotlin.math.abs
 
 data class UiState(
-    val diceValue: Int = 0,
+    val diceValue: DiceValue? = null,
     val diceQuantity: Int = 1,
     val diceModifier: Int = 0,
     var diceModifierResult: String = "+ 0",
     val diceRollPlusModifier: String = "0 + 0",
     val finalResult: String = "0",
     var finalResultColor: Color = Color.Black,
-    val finalResultsBreakdown: String = ""
+    val finalResultsBreakdown: String = "",
 )
 
 class DiceRollerViewModel : ViewModel() {
@@ -33,7 +33,7 @@ class DiceRollerViewModel : ViewModel() {
 
     fun onDiceSelectionClick(selectedDiceValue: DiceValue) {
         _uiState.update {
-            it.copy(diceValue = selectedDiceValue.selectedValue)
+            it.copy(diceValue = selectedDiceValue)
         }
     }
 
@@ -41,7 +41,7 @@ class DiceRollerViewModel : ViewModel() {
         var diceRollTotal = 0
         resultsBreakdown = ""
         for (i in 1..currentState.diceQuantity) {
-            val currentRoll = generator.rollDice(currentState.diceValue)
+            val currentRoll = generator.rollDice(currentState.diceValue?.selectedValue ?: 0)
             diceRollTotal += currentRoll
             if (resultsBreakdown.isBlank()) {
                 resultsBreakdown = "$currentRoll"
@@ -54,7 +54,7 @@ class DiceRollerViewModel : ViewModel() {
 
         // Changes FinalResultColor if minimum or maximum value is rolled
         val diceMinValue = currentState.diceQuantity * 1
-        val diceMaxValue = currentState.diceQuantity * currentState.diceValue
+        val diceMaxValue = currentState.diceQuantity * (currentState.diceValue?.selectedValue ?: 0)
         when (diceRollTotal) {
             diceMaxValue -> {
                 currentState.finalResultColor = Color.Green

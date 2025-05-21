@@ -68,7 +68,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
 
         Subtitle()
 
-        DiceSelection { selectedDiceValue ->
+        DiceSelection (selectedDiceValue = uiState.diceValue ) { selectedDiceValue ->
             viewModel.onDiceSelectionClick(selectedDiceValue)
             Toast.makeText(context, "Dice Selection : $selectedDiceValue", Toast.LENGTH_SHORT).show()
         }
@@ -86,7 +86,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
         Spacer(modifier = Modifier.height(10.dp))
 
         PrimaryRollButton {
-            if (uiState.diceValue == 0) {
+            if (uiState.diceValue == null) {
                 Toast.makeText(context, "Please select a dice before rolling.", Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.onDiceRollClick()
@@ -131,14 +131,14 @@ fun Subtitle() {
 }
 
 @Composable
-fun DiceSelection(onClick: (DiceValue) -> Unit) {
+fun DiceSelection(selectedDiceValue: DiceValue?, onClick: (DiceValue) -> Unit) {
     val values = DiceValue.entries.toTypedArray()
     val middle = values.size / 2
 
     // Dice Selection Buttons - "d2", "d4", "d6", "d8"
-    DiceButtonRow(start = 0, finish = middle, onClick = onClick)
+    DiceButtonRow(start = 0, finish = middle,  selectedDiceValue = selectedDiceValue , onClick = onClick)
     // Dice Selection Buttons - "d10", "d12", "d20", "d100"
-    DiceButtonRow(start = middle, finish = values.size, onClick = onClick)
+    DiceButtonRow(start = middle, finish = values.size, selectedDiceValue = selectedDiceValue ,onClick = onClick)
 }
 
 @Composable
