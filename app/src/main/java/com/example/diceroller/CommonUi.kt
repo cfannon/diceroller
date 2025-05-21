@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.diceroller.ui.theme.DiceRollerTheme
 
-enum class DiceValue(val selectedValue: Int, val drawableResource: Int, val label: String) {
+enum class Dice(val max: Int, val drawableResource: Int, val label: String) {
     D2(2, R.drawable.d2, "d2"),
     D4(4, R.drawable.d4, "d4"),
     D6(6, R.drawable.d6,"d6"),
@@ -26,22 +26,22 @@ enum class DiceValue(val selectedValue: Int, val drawableResource: Int, val labe
 }
 
 @Composable
-fun DiceSelectionButton(modifier: Modifier = Modifier, diceValue: DiceValue, isSelected: Boolean, onClick: (DiceValue) -> Unit) {
+fun DiceSelectionButton(modifier: Modifier = Modifier, dice: Dice, isSelected: Boolean, onClick: (Dice) -> Unit) {
     val unselectedColor = MaterialTheme.colorScheme.primary
     val selectedColor = MaterialTheme.colorScheme.secondary
 
     Icon(
-        painter = painterResource(diceValue.drawableResource),
-        contentDescription = diceValue.label,
+        painter = painterResource(dice.drawableResource),
+        contentDescription = dice.label,
         tint = if (isSelected) selectedColor else unselectedColor,
         modifier = modifier
-            .clickable { onClick(diceValue) }
+            .clickable { onClick(dice) }
     )
 }
 
 @Composable
-fun DiceButtonRow (start: Int, finish: Int, selectedDiceValue: DiceValue?, onClick: (DiceValue) -> Unit) {
-    val values = DiceValue.entries.toTypedArray()
+fun DiceButtonRow (start: Int, finish: Int, selectedDice: Dice?, onClick: (Dice) -> Unit) {
+    val values = Dice.entries.toTypedArray()
 
     Row(
         Modifier
@@ -54,8 +54,8 @@ fun DiceButtonRow (start: Int, finish: Int, selectedDiceValue: DiceValue?, onCli
             val diceValue = values[i]
             DiceSelectionButton(
                 equalWidthModifier,
-                diceValue = diceValue,
-                isSelected = selectedDiceValue == diceValue
+                dice = diceValue,
+                isSelected = selectedDice == diceValue
             ) { onClick(diceValue) }
         }
     }
@@ -65,7 +65,7 @@ fun DiceButtonRow (start: Int, finish: Int, selectedDiceValue: DiceValue?, onCli
 @Composable
 fun DiceSelectionPreview() {
     DiceRollerTheme {
-        DiceSelectionButton(Modifier, DiceValue.D20, false) {
+        DiceSelectionButton(Modifier, Dice.D20, false) {
         }
     }
 }
