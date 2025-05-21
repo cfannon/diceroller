@@ -68,7 +68,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
 
         Subtitle()
 
-        DiceSelection (selectedDice = uiState.dice ) { selectedDiceValue ->
+        DiceSelection (selectedDice = uiState.diceValue ) { selectedDiceValue ->
             viewModel.onDiceSelectionClick(selectedDiceValue)
             Toast.makeText(context, "Dice Selection : $selectedDiceValue", Toast.LENGTH_SHORT).show()
         }
@@ -86,7 +86,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
         Spacer(modifier = Modifier.height(10.dp))
 
         PrimaryRollButton {
-            if (uiState.dice == null) {
+            if (uiState.diceValue == null) {
                 Toast.makeText(context, "Please select a dice before rolling.", Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.onDiceRollClick()
