@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,9 +16,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -143,6 +145,7 @@ fun DiceSelection(selectedDice: Dice?, onClick: (Dice) -> Unit) {
 
 @Composable
 fun ModifierButtons(
+    modifier: Modifier = Modifier,
     onDiceQuantityDownClick: () -> Unit,
     onDiceQuantityUpClick: () -> Unit,
     diceQuantity: Int,
@@ -174,16 +177,15 @@ fun ModifierButtons(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Button(
-                    onClick = { onDiceQuantityDownClick() },
-                    shape = RectangleShape,
-                    modifier = Modifier
-                        .height(32.dp)
-                        .width(32.dp)
-                        .padding(2.dp),
-                ) {
-                    Text(text = "-")
-                }
+                Icon(
+                    painter = painterResource(R.drawable.icon_subtractbox),
+                    contentDescription = "Subtract dice",
+                    modifier = modifier
+                        .clickable { onDiceQuantityDownClick() }
+                        .height(36.dp)
+                        .width(36.dp)
+                        .padding(2.dp)
+                )
 
                 Text(
                     text = "${diceQuantity}d",
@@ -192,16 +194,15 @@ fun ModifierButtons(
                     textAlign = TextAlign.Center,
                 )
 
-                Button(
-                    onClick = { onDiceQuantityUpClick() },
-                    shape = RectangleShape,
-                    modifier = Modifier
-                        .height(32.dp)
-                        .width(32.dp)
-                        .padding(2.dp),
-                ) {
-                    Text(text = "+")
-                }
+                Icon(
+                    painter = painterResource(R.drawable.icon_addbox),
+                    contentDescription = "Add modifier",
+                    modifier = modifier
+                        .clickable { onDiceQuantityUpClick() }
+                        .height(36.dp)
+                        .width(36.dp)
+                        .padding(2.dp)
+                )
             }
         }
 
@@ -219,16 +220,15 @@ fun ModifierButtons(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Button(
-                    onClick = { onDiceModifierDownClick() },
-                    shape = RectangleShape,
-                    modifier = Modifier
-                        .height(32.dp)
-                        .width(32.dp)
-                        .padding(2.dp),
-                ) {
-                    Text(text = "-")
-                }
+                Icon(
+                    painter = painterResource(R.drawable.icon_subtractbox),
+                    contentDescription = "Subtract modifier",
+                    modifier = modifier
+                        .clickable { onDiceModifierDownClick() }
+                        .height(36.dp)
+                        .width(36.dp)
+                        .padding(2.dp)
+                )
 
                 Text(
                     text = diceModifierResult,
@@ -237,16 +237,15 @@ fun ModifierButtons(
                     textAlign = TextAlign.Center,
                 )
 
-                Button(
-                    onClick = { onDiceModifierUpClick() },
-                    shape = RectangleShape,
-                    modifier = Modifier
-                        .height(32.dp)
-                        .width(32.dp)
-                        .padding(2.dp),
-                ) {
-                    Text(text = "+")
-                }
+                Icon(
+                    painter = painterResource(R.drawable.icon_addbox),
+                    contentDescription = "Add modifier",
+                    modifier = modifier
+                        .clickable { onDiceModifierUpClick() }
+                        .height(36.dp)
+                        .width(36.dp)
+                        .padding(2.dp)
+                )
             }
         }
 
@@ -259,15 +258,15 @@ fun ModifierButtons(
         - Should reset Dice Modifier to 0
         - Should clear previously displayed roll
          */
-        Button(
-            onClick = { onResetClick() },
-            shape = RectangleShape,
-            modifier = Modifier.wrapContentSize()
-//                .height(40.dp)
-//                .width(40.dp)
-        ) {
-            Text(text = "X")
-        }
+        Icon(
+            painter = painterResource(R.drawable.icon_disabled),
+            contentDescription = "Clear all",
+            tint = Color.Red,
+            modifier = modifier
+                .clickable { onResetClick() }
+                .height(48.dp)
+                .width(48.dp)
+        )
     }
 }
 
