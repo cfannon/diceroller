@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -72,34 +73,41 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
 
         DiceSelection (selectedDice = uiState.diceValue ) { selectedDiceValue ->
             viewModel.onDiceSelectionClick(selectedDiceValue)
-            Toast.makeText(context, "Dice Selection : $selectedDiceValue", Toast.LENGTH_SHORT).show()
         }
 
         ModifierButtons(
+            rollTypeState = uiState.rollType,
+            onRollTypeClick = viewModel::applyRollTypeClick,
             onDiceQuantityDownClick = viewModel::onDiceQuantityDownClick,
             onDiceQuantityUpClick = viewModel::onDiceQuantityUpClick,
             diceQuantity = uiState.diceQuantity,
             onDiceModifierDownClick = viewModel::onDiceModifierDownClick,
             onDiceModifierUpClick = viewModel::onDiceModifierUpClick,
             diceModifierResult = uiState.diceModifierResult,
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        PrimaryActionButtons(
+            onRollButtonClick = viewModel::onDiceRollClick,
             onResetClick = viewModel::onResetClick
         )
 
-        Spacer(modifier = Modifier.height(10.dp))
-
-        PrimaryRollButton {
-            if (uiState.diceValue == null) {
-                Toast.makeText(context, "Please select a dice before rolling.", Toast.LENGTH_SHORT).show()
-            } else {
-                viewModel.onDiceRollClick()
-            }
+        LaunchedEffect(uiState.errorMessage) {
+             uiState.errorMessage?.let {
+                 Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+             }
         }
 
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        ResultsSection(finalResult = uiState.finalResult, finalResultColor = uiState.finalResultColor, diceRollPlusModifier = uiState.diceRollPlusModifier)
+        ResultsSection(
+            finalResult = uiState.finalResult,
+            finalResultColor = uiState.finalResultColor,
+            diceRollPlusModifier = uiState.diceRollPlusModifier
+        )
 
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         ResultsBreakdownSection(finalResultsBreakdown = uiState.finalResultsBreakdown)
     }
@@ -146,13 +154,14 @@ fun DiceSelection(selectedDice: Dice?, onClick: (Dice) -> Unit) {
 @Composable
 fun ModifierButtons(
     modifier: Modifier = Modifier,
+    rollTypeState: RollTypeState,
+    onRollTypeClick: (RollTypeState) -> Unit,
     onDiceQuantityDownClick: () -> Unit,
     onDiceQuantityUpClick: () -> Unit,
     diceQuantity: Int,
     onDiceModifierDownClick: () -> Unit,
     onDiceModifierUpClick: () -> Unit,
     diceModifierResult: String,
-    onResetClick: () -> Unit
 ) {
 
     Row(
@@ -162,15 +171,25 @@ fun ModifierButtons(
         verticalAlignment = Alignment.CenterVertically
 
     ){
-        /*
-         Dice Quantity:
-         - Should not be able to go below 1 dice
-         */
+        // Roll Type Card
         Card(
             shape = RectangleShape,
             modifier = Modifier
                 .height(40.dp)
-                .width(125.dp)
+                .width(115.dp)
+        ) {
+            RollTypeRow(selected = rollTypeState, onClick = onRollTypeClick)
+        }
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        // Dice Quantity Card
+            // - Should not be able to go below 1 dice
+        Card(
+            shape = RectangleShape,
+            modifier = Modifier
+                .height(40.dp)
+                .width(115.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxSize(),
@@ -190,7 +209,7 @@ fun ModifierButtons(
                 Text(
                     text = "${diceQuantity}d",
                     Modifier
-                        .width(50.dp),
+                        .width(40.dp),
                     textAlign = TextAlign.Center,
                 )
 
@@ -206,14 +225,14 @@ fun ModifierButtons(
             }
         }
 
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(8.dp))
 
-        // Dice Modifier
+        // Dice Modifier Card
         Card(
             shape = RectangleShape,
             modifier = Modifier
                 .height(40.dp)
-                .width(125.dp)
+                .width(115.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxSize(),
@@ -233,7 +252,7 @@ fun ModifierButtons(
                 Text(
                     text = diceModifierResult,
                     Modifier
-                        .width(50.dp),
+                        .width(40.dp),
                     textAlign = TextAlign.Center,
                 )
 
@@ -248,46 +267,58 @@ fun ModifierButtons(
                 )
             }
         }
-
-        Spacer(modifier = Modifier.width(10.dp))
-
-        /*
-        Reset Button:
-        - Should clear any selected Dice Button
-        - Should reset Dice Quantity to 1
-        - Should reset Dice Modifier to 0
-        - Should clear previously displayed roll
-         */
-        Icon(
-            painter = painterResource(R.drawable.icon_disabled),
-            contentDescription = "Clear all",
-            tint = Color.Red,
-            modifier = modifier
-                .clickable { onResetClick() }
-                .height(48.dp)
-                .width(48.dp)
-        )
     }
 }
 
 @Composable
-fun PrimaryRollButton(onClick: () -> Unit) {
+fun PrimaryActionButtons(
+    modifier: Modifier = Modifier,
+    onRollButtonClick: () -> Unit,
+    onResetClick: () -> Unit
+) {
     Row (
         Modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Roll Button
         Button (
-            onClick = onClick,
+            onClick = onRollButtonClick,
             shape = RectangleShape,
             modifier = Modifier
                 .height(50.dp)
                 .width(150.dp)
+                .weight(1f)
         ) {
             Text(
                 text = "Roll!",
                 fontSize = 25.sp
                 )
+        }
+
+        /*  Reset Button:
+                - Should clear any selected Dice Button
+                - Should reset Dice Quantity to 1
+                - Should reset Dice Modifier to 0
+                - Should clear previously displayed roll
+                - Should reset Roll Type to Standard
+        */
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.icon_disabled),
+                contentDescription = "Reset all",
+                tint = Color.Red,
+                modifier = modifier
+                    .clickable { onResetClick() }
+                    .height(48.dp)
+                    .width(48.dp)
+            )
         }
     }
 }
