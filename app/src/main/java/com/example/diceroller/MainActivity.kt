@@ -196,7 +196,7 @@ fun ModifierButtons(
 
                 Icon(
                     painter = painterResource(R.drawable.icon_addbox),
-                    contentDescription = "Add modifier",
+                    contentDescription = "Add dice",
                     modifier = modifier
                         .clickable { onDiceQuantityUpClick() }
                         .height(36.dp)
