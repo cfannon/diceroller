@@ -75,6 +75,8 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
             viewModel.onDiceSelectionClick(selectedDiceValue)
         }
 
+        Spacer(modifier = Modifier.height(12.dp))
+
         ModifierButtons(
             rollTypeState = uiState.rollType,
             onRollTypeClick = viewModel::applyRollTypeClick,
@@ -86,7 +88,7 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
             diceModifierResult = uiState.diceModifierResult,
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         PrimaryActionButtons(
             onRollButtonClick = viewModel::onDiceRollClick,
@@ -123,7 +125,7 @@ fun HeaderSection() {
     ) {
         Text (
             text = "DICE ROLLER",
-            fontSize = 40.sp
+            fontSize = 50.sp
         )
     }
 }
@@ -313,7 +315,7 @@ fun PrimaryActionButtons(
             Icon(
                 painter = painterResource(R.drawable.icon_disabled),
                 contentDescription = "Reset all",
-                tint = Color.Red,
+                tint = MaterialTheme.colorScheme.error,
                 modifier = modifier
                     .clickable { onResetClick() }
                     .height(48.dp)
@@ -338,7 +340,7 @@ fun ResultsSection(finalResult: String, finalResultColor: Color, diceRollPlusMod
             Text(
                 text = finalResult,
                 color = finalResultColor,
-                fontSize = 80.sp
+                fontSize = 88.sp
             )
             Text(
                 text = diceRollPlusModifier,
@@ -356,10 +358,10 @@ fun ResultsBreakdownSection(finalResultsBreakdown: String) {
         horizontalArrangement = Arrangement.Center) {
         Column(
             Modifier
-                .border(8.dp, Color.Black, RectangleShape)
-                .height(200.dp)
-                .width(300.dp)
-                .padding(20.dp),
+                .border(4.dp, Color.Black, RectangleShape)
+                .height(180.dp)
+                .width(350.dp)
+                .padding(12.dp),
         ) {
             Row() {
                 Text(text = "Results Breakdown:")
