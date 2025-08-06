@@ -3,6 +3,9 @@ package com.example.diceroller
 import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import com.example.diceroller.history.HistoryEntry
+import com.example.diceroller.history.HistoryEntryRepository
+import com.example.diceroller.history.HistoryEntryRepositoryImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -29,7 +32,7 @@ enum class RollTypeState(val drawableResource: Int, val label: String) {
 
 private const val AdvantageDiceQuantity = 2
 
-class DiceRollerViewModel : ViewModel() {
+class DiceRollerViewModel(val repo: HistoryEntryRepository = HistoryEntryRepositoryImpl) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
@@ -68,6 +71,13 @@ class DiceRollerViewModel : ViewModel() {
             val finalResultUpdate = diceRollTotal + currentState.diceModifier
             val finalResultValue = "$finalResultUpdate"
             val finalResultsBreakdownUpdate = "$finalResultUpdate : $resultsBreakdown Modifier)"
+
+            repo.save(
+                HistoryEntry(
+                    dice = currentState.diceValue,
+                    rollResult = finalResultsBreakdownUpdate
+                )
+            )
 
             Log.d("ResultsBreakdown", resultsBreakdown)
 
