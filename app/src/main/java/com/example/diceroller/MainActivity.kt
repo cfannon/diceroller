@@ -359,7 +359,7 @@ fun ResultsBreakdownSection(finalResultsBreakdown: String) {
         Column(
             Modifier
                 .border(4.dp, Color.Black, RectangleShape)
-                .height(180.dp)
+                .height(120.dp)
                 .width(350.dp)
                 .padding(12.dp),
         ) {
@@ -375,7 +375,7 @@ fun ResultsBreakdownSection(finalResultsBreakdown: String) {
 
 @Preview(showBackground = true)
 @Composable
-fun AppPreview() {
+private fun AppPreview() {
     DiceRollerTheme {
         DiceRollerApp()
     }
