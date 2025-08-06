@@ -4,9 +4,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -20,19 +23,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.diceroller.R
 
-
-// TODO: 'Clear History' CTA
 // TODO: Modify/Finalize UI for History Screen
 @Composable
 fun HistoryScreenLayout(
     modifier: Modifier = Modifier,
+    onBackNavigationClick: () -> Unit = {},
     viewModel: HistoryScreenViewModel = HistoryScreenViewModel()
 ) {
-
     Column(
         Modifier
             .fillMaxWidth()
@@ -44,13 +47,35 @@ fun HistoryScreenLayout(
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(top = 8.dp, bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
+            // Back Navigation Button
+            Row(
+                modifier = Modifier.weight(.25f),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.icon_chevron_left),
+                    contentDescription = "Back",
+                    modifier = modifier
+                        .clickable(onClick = { onBackNavigationClick() })
+                        .height(36.dp)
+                        .width(36.dp)
+                )
+            }
+
             Text(
                 text = "Roll History",
-                fontSize = 24.sp
-            )
+                fontSize = 32.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .weight(1f),
+
+                )
+
+            Spacer(modifier = Modifier.weight(.25f))
         }
 
         // Displays list of rolls if any have been made, otherwise displays message
@@ -83,7 +108,7 @@ fun HistoryScreenLayout(
                         Text(
                             text = "Clear History",
                             fontSize = 16.sp,
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                            fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.error,
                             modifier = modifier
                                 .clickable { viewModel.onClearHistoryClick() }
@@ -147,6 +172,11 @@ fun HistoryItemLabel(
             text = resultBreakdown
         )
     }
+}
+
+@Composable
+fun onBackNavigationClick() {
+
 }
 
 @Preview (showBackground = true)

@@ -49,6 +49,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     DiceRollerApp()
+//                    HistoryScreenLayout()
                 }
             }
         }
@@ -112,6 +113,11 @@ fun DiceRollerLayout(modifier: Modifier = Modifier, viewModel: DiceRollerViewMod
         Spacer(modifier = Modifier.height(24.dp))
 
         ResultsBreakdownSection(finalResultsBreakdown = uiState.finalResultsBreakdown)
+
+        NavigationBar(
+            onHistoryNavigationClick = {},
+            onSettingsClick = {}
+        )
     }
 }
 
@@ -370,6 +376,45 @@ fun ResultsBreakdownSection(finalResultsBreakdown: String) {
                 Text(text = finalResultsBreakdown)
             }
         }
+    }
+}
+
+// Temporary Navigation Row
+@Composable
+fun NavigationBar(
+    modifier: Modifier = Modifier,
+    onHistoryNavigationClick: () -> Unit,
+    onSettingsClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(75.dp)
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.icon_history),
+            contentDescription = "History Navigation",
+            modifier = modifier
+                .clickable { onHistoryNavigationClick }
+                .height(36.dp)
+                .width(36.dp)
+                .padding(2.dp)
+        )
+
+        Spacer(modifier = Modifier.width(50.dp))
+
+        Icon(
+            painter = painterResource(R.drawable.icon_settings),
+            contentDescription = "Settings Navigation",
+            modifier = modifier
+                .clickable { onSettingsClick }
+                .height(36.dp)
+                .width(36.dp)
+                .padding(2.dp)
+        )
     }
 }
 
