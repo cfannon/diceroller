@@ -19,7 +19,7 @@ class HistoryScreenViewModel(val repo: HistoryEntryRepository = HistoryEntryRepo
     }
 
     // Clear all History
-    fun clearHistory() {
+    fun onClearHistoryClick() {
         repo.clear()
     }
 }
@@ -29,6 +29,7 @@ data class HistoryUiState(
 )
 
 data class HistoryEntry(
-    val dice : Dice = Dice.D20,
-    val rollResult: String = "13 : 13 (+ 1 Modifier)"
+    val dice : Dice = Dice.D10,
+    val finalRollResult: String = "16" + " :",
+    val rollResultBreakdown: String = "7 + 8 (+ 1 Modifier)"
 )
