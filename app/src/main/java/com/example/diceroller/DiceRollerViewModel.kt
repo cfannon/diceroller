@@ -75,7 +75,8 @@ class DiceRollerViewModel(val repo: HistoryEntryRepository = HistoryEntryReposit
             repo.save(
                 HistoryEntry(
                     dice = currentState.diceValue,
-                    rollResult = finalResultsBreakdownUpdate
+                    finalRollResult = finalResultValue,
+                    rollResultBreakdown = finalResultsBreakdownUpdate
                 )
             )
 
