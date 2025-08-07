@@ -1,7 +1,7 @@
 package com.example.diceroller.history
 
 import androidx.lifecycle.ViewModel
-import com.example.diceroller.Dice
+import com.example.diceroller.diceroller.Dice
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
