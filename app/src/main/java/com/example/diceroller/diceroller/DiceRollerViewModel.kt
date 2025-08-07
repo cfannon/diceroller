@@ -1,8 +1,9 @@
-package com.example.diceroller
+package com.example.diceroller.diceroller
 
 import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import com.example.diceroller.R
 import com.example.diceroller.history.HistoryEntry
 import com.example.diceroller.history.HistoryEntryRepository
 import com.example.diceroller.history.HistoryEntryRepositoryImpl
@@ -71,12 +72,14 @@ class DiceRollerViewModel(val repo: HistoryEntryRepository = HistoryEntryReposit
             val finalResultUpdate = diceRollTotal + currentState.diceModifier
             val finalResultValue = "$finalResultUpdate"
             val finalResultsBreakdownUpdate = "$finalResultUpdate : $resultsBreakdown Modifier)"
+            val historyRollResultsBreakdown = "$resultsBreakdown Modifier)"
 
+            // Save the results to History
             repo.save(
                 HistoryEntry(
                     dice = currentState.diceValue,
-                    finalRollResult = finalResultValue,
-                    rollResultBreakdown = finalResultsBreakdownUpdate
+                    finalRollResult = "$finalResultValue :",
+                    rollResultBreakdown = historyRollResultsBreakdown
                 )
             )
 
