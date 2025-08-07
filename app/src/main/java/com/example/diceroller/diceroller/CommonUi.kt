@@ -1,4 +1,4 @@
-package com.example.diceroller
+package com.example.diceroller.diceroller
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.diceroller.R
 import com.example.diceroller.ui.theme.DiceRollerTheme
 
 enum class Dice(val max: Int, val drawableResource: Int, val label: String) {

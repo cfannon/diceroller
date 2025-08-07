@@ -1,6 +1,4 @@
-package com.example.diceroller
-
-import kotlin.random.Random
+package com.example.diceroller.diceroller
 
 interface NumberGenerator {
 
