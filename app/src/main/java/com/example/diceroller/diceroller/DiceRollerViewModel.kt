@@ -192,7 +192,6 @@ class DiceRollerViewModel(val repo: HistoryEntryRepository = HistoryEntryReposit
         if (currentState.rollType == RollTypeState.Standard) {
             currentState.copy(diceQuantity = diceQuantityUpdate)
         } else currentState
-
     }
 
     fun onDiceQuantityUpClick() = _uiState.update { currentState ->
@@ -210,7 +209,10 @@ class DiceRollerViewModel(val repo: HistoryEntryRepository = HistoryEntryReposit
                 } else {
                     "+ ${abs(diceModifierUpdate)}"
                 }
-            it.copy(diceModifier = diceModifierUpdate, diceModifierResult = diceModifierResultUpdate)
+            it.copy(
+                diceModifier = diceModifierUpdate,
+                diceModifierResult = diceModifierResultUpdate
+            )
         }
     }
 
@@ -223,7 +225,10 @@ class DiceRollerViewModel(val repo: HistoryEntryRepository = HistoryEntryReposit
                 } else {
                     "+ ${abs(diceModifierUpdate)}"
                 }
-            it.copy(diceModifier = diceModifierUpdate, diceModifierResult = diceModifierResultUpdate)
+            it.copy(
+                diceModifier = diceModifierUpdate,
+                diceModifierResult = diceModifierResultUpdate
+            )
         }
     }
 
