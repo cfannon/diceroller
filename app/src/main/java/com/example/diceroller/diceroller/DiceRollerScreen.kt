@@ -39,7 +39,8 @@ import com.example.diceroller.ui.theme.DiceRollerTheme
 fun DiceRollerScreenLayout(
     modifier: Modifier = Modifier,
     viewModel: DiceRollerViewModel = DiceRollerViewModel(),
-    onNavigationToHistoryClick: () -> Unit
+    onNavigationToHistoryClick: () -> Unit,
+    onNavigationToSettingsClick: () -> Unit
 ) {
     Column (modifier.fillMaxHeight()) {
 
@@ -94,7 +95,7 @@ fun DiceRollerScreenLayout(
 
         NavigationBar(
             onNavigationToHistoryClick = onNavigationToHistoryClick,
-            onSettingsClick = {} // TODO: Add settings
+            onNavigationToSettingsClick = onNavigationToSettingsClick
         )
     }
 }
@@ -363,8 +364,10 @@ fun ResultsBreakdownSection(finalResultsBreakdown: String) {
 fun NavigationBar(
     modifier: Modifier = Modifier,
     onNavigationToHistoryClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    onNavigationToSettingsClick: () -> Unit
 ) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -376,8 +379,9 @@ fun NavigationBar(
         Icon(
             painter = painterResource(R.drawable.icon_history),
             contentDescription = "History Navigation",
+            tint = primaryColor,
             modifier = modifier
-                .clickable(onClick = { onNavigationToHistoryClick() })
+                .clickable { onNavigationToHistoryClick() }
                 .height(36.dp)
                 .width(36.dp)
                 .padding(2.dp)
@@ -388,8 +392,9 @@ fun NavigationBar(
         Icon(
             painter = painterResource(R.drawable.icon_settings),
             contentDescription = "Settings Navigation",
+            tint = primaryColor,
             modifier = modifier
-                .clickable { onSettingsClick() }
+                .clickable { onNavigationToSettingsClick() }
                 .height(36.dp)
                 .width(36.dp)
                 .padding(2.dp)
@@ -403,7 +408,8 @@ private fun AppPreview() {
     DiceRollerTheme {
         DiceRollerScreenLayout(
             viewModel = DiceRollerViewModel(),
-            onNavigationToHistoryClick = {}
+            onNavigationToHistoryClick = {},
+            onNavigationToSettingsClick = {}
         )
     }
 }
