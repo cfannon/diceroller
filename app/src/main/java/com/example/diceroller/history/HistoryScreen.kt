@@ -29,12 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.diceroller.R
 
-// TODO: Modify/Finalize UI for History Screen
 @Composable
 fun HistoryScreenLayout(
     modifier: Modifier = Modifier,
-    onBackNavigationClick: () -> Unit = {},
-    viewModel: HistoryScreenViewModel = HistoryScreenViewModel()
+    viewModel: HistoryScreenViewModel = HistoryScreenViewModel(),
+    onNavigationToDiceRollerClick: () -> Unit
 ) {
     Column(
         Modifier
@@ -60,7 +59,7 @@ fun HistoryScreenLayout(
                     painter = painterResource(R.drawable.icon_chevron_left),
                     contentDescription = "Back",
                     modifier = modifier
-                        .clickable(onClick = { onBackNavigationClick() })
+                        .clickable(onClick = { onNavigationToDiceRollerClick() })
                         .height(36.dp)
                         .width(36.dp)
                 )
@@ -79,7 +78,7 @@ fun HistoryScreenLayout(
         }
 
         // Displays list of rolls if any have been made, otherwise displays message
-        if (uiState.historyList.isEmpty()) {
+        if (uiState.newToOldSortedHistoryList.isEmpty()) {
             Row (
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -94,16 +93,14 @@ fun HistoryScreenLayout(
             LazyColumn(
                 Modifier.fillMaxWidth()
             ) {
-                items(uiState.historyList) { entry ->
+                items(uiState.newToOldSortedHistoryList) { entry ->
                     HistoryItem(entry = entry)
                 }
-
-                // TODO: 'Clear History' CTA
-                item {
+                item{
                     Row(
                         Modifier
                             .fillMaxWidth()
-                            .padding(4.dp),
+                            .padding(4.dp)
                     ) {
                         Text(
                             text = "Clear History",
@@ -161,22 +158,23 @@ fun HistoryItemLabel(
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = finalResult,
-            modifier = modifier
-                .padding(end = 4.dp),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
+        Row(
+            modifier = Modifier
+                .width(52.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            Text(
+                text = finalResult,
+                modifier = modifier
+                    .padding(end = 4.dp),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
         Text(
             text = resultBreakdown
         )
     }
-}
-
-@Composable
-fun onBackNavigationClick() {
-
 }
 
 @Preview (showBackground = true)
@@ -185,9 +183,11 @@ private fun HistoryItemPreview() {
     HistoryItem(entry = HistoryEntry())
 }
 
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun HistoryScreenPreview() {
-    HistoryScreenLayout()
+    HistoryScreenLayout(
+        viewModel = HistoryScreenViewModel(),
+        onNavigationToDiceRollerClick = {}
+    )
 }
