@@ -17,6 +17,8 @@ import com.example.diceroller.diceroller.DiceRollerScreenLayout
 import com.example.diceroller.diceroller.DiceRollerViewModel
 import com.example.diceroller.history.HistoryScreenLayout
 import com.example.diceroller.history.HistoryScreenViewModel
+import com.example.diceroller.settings.SettingsScreenLayout
+import com.example.diceroller.settings.SettingsScreenViewModel
 import com.example.diceroller.ui.theme.DiceRollerTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,12 +52,23 @@ fun AppNavigation() {
                 viewModel = diceRollerViewModel,
                 onNavigationToHistoryClick = {
                     navController.navigate(AppDestinations.HISTORY_ROUTE)
+                },
+                onNavigationToSettingsClick = {
+                    navController.navigate(AppDestinations.SETTINGS_ROUTE)
                 }
             )
         }
         composable(AppDestinations.HISTORY_ROUTE) {
             HistoryScreenLayout(
                 viewModel = HistoryScreenViewModel(),
+                onNavigationToDiceRollerClick = {
+                    navController.navigate(AppDestinations.DICE_ROLLER_ROUTE)
+                }
+            )
+        }
+        composable(AppDestinations.SETTINGS_ROUTE) {
+            SettingsScreenLayout(
+                viewModel = SettingsScreenViewModel(),
                 onNavigationToDiceRollerClick = {
                     navController.navigate(AppDestinations.DICE_ROLLER_ROUTE)
                 }
