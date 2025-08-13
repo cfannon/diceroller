@@ -39,8 +39,6 @@ import com.example.diceroller.ui.theme.DiceRollerTheme
 fun DiceRollerScreenLayout(
     modifier: Modifier = Modifier,
     viewModel: DiceRollerViewModel = DiceRollerViewModel(),
-    onNavigationToHistoryClick: () -> Unit,
-    onNavigationToSettingsClick: () -> Unit
 ) {
     Column (modifier.fillMaxHeight()) {
 
@@ -92,11 +90,6 @@ fun DiceRollerScreenLayout(
         Spacer(modifier = Modifier.height(24.dp))
 
         ResultsBreakdownSection(finalResultsBreakdown = uiState.finalResultsBreakdown)
-
-        NavigationBar(
-            onNavigationToHistoryClick = onNavigationToHistoryClick,
-            onNavigationToSettingsClick = onNavigationToSettingsClick
-        )
     }
 }
 
@@ -359,57 +352,12 @@ fun ResultsBreakdownSection(finalResultsBreakdown: String) {
     }
 }
 
-// Temporary Navigation Row
-@Composable
-fun NavigationBar(
-    modifier: Modifier = Modifier,
-    onNavigationToHistoryClick: () -> Unit,
-    onNavigationToSettingsClick: () -> Unit
-) {
-    val primaryColor = MaterialTheme.colorScheme.primary
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(75.dp)
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.icon_history),
-            contentDescription = "History Navigation",
-            tint = primaryColor,
-            modifier = modifier
-                .clickable { onNavigationToHistoryClick() }
-                .height(36.dp)
-                .width(36.dp)
-                .padding(2.dp)
-        )
-
-        Spacer(modifier = Modifier.width(50.dp))
-
-        Icon(
-            painter = painterResource(R.drawable.icon_settings),
-            contentDescription = "Settings Navigation",
-            tint = primaryColor,
-            modifier = modifier
-                .clickable { onNavigationToSettingsClick() }
-                .height(36.dp)
-                .width(36.dp)
-                .padding(2.dp)
-        )
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun AppPreview() {
     DiceRollerTheme {
         DiceRollerScreenLayout(
-            viewModel = DiceRollerViewModel(),
-            onNavigationToHistoryClick = {},
-            onNavigationToSettingsClick = {}
+            viewModel = DiceRollerViewModel()
         )
     }
 }

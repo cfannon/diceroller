@@ -4,9 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,13 +25,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.diceroller.R
 
 @Composable
 fun HistoryScreenLayout(
     modifier: Modifier = Modifier,
     viewModel: HistoryScreenViewModel = HistoryScreenViewModel(),
-    onNavigationToDiceRollerClick: () -> Unit
 ) {
     Column(
         Modifier
@@ -50,31 +46,11 @@ fun HistoryScreenLayout(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
-            // Back Navigation Button
-            Row(
-                modifier = Modifier.weight(.25f),
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.icon_chevron_left),
-                    contentDescription = "Back",
-                    modifier = modifier
-                        .clickable(onClick = { onNavigationToDiceRollerClick() })
-                        .height(36.dp)
-                        .width(36.dp)
-                )
-            }
-
             Text(
                 text = "Roll History",
                 fontSize = 32.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .weight(1f),
-
-                )
-
-            Spacer(modifier = Modifier.weight(.25f))
+                textAlign = TextAlign.Center
+            )
         }
 
         // Displays list of rolls if any have been made, otherwise displays message
@@ -187,7 +163,6 @@ private fun HistoryItemPreview() {
 @Composable
 private fun HistoryScreenPreview() {
     HistoryScreenLayout(
-        viewModel = HistoryScreenViewModel(),
-        onNavigationToDiceRollerClick = {}
+        viewModel = HistoryScreenViewModel()
     )
 }
