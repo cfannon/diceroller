@@ -29,6 +29,8 @@ import com.example.diceroller.diceroller.DiceRollerViewModel
 import com.example.diceroller.history.HistoryScreenLayout
 import com.example.diceroller.history.HistoryScreenViewModel
 import com.example.diceroller.navigation.bottomNavigationItems
+import com.example.diceroller.presetdice.PresetDiceScreenLayout
+import com.example.diceroller.presetdice.PresetDiceScreenViewModel
 import com.example.diceroller.settings.SettingsScreenLayout
 import com.example.diceroller.settings.SettingsScreenViewModel
 import com.example.diceroller.ui.theme.DiceRollerTheme
@@ -54,6 +56,7 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation() {
     val navController: NavHostController = rememberNavController()
     val diceRollerViewModel: DiceRollerViewModel = viewModel()
+    val presetDiceScreenViewModel: PresetDiceScreenViewModel = viewModel()
     val historyScreenViewModel: HistoryScreenViewModel = viewModel()
     val settingsScreenViewModel: SettingsScreenViewModel = viewModel()
 
@@ -70,6 +73,11 @@ fun AppNavigation() {
             composable(AppDestinations.DICE_ROLLER_ROUTE) {
                 DiceRollerScreenLayout(
                     viewModel = diceRollerViewModel
+                )
+            }
+            composable(AppDestinations.DICE_PRESET_ROUTE) {
+                PresetDiceScreenLayout(
+                    viewModel = presetDiceScreenViewModel
                 )
             }
             composable(AppDestinations.HISTORY_ROUTE) {
