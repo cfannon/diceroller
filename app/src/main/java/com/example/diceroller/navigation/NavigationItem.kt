@@ -17,7 +17,7 @@ sealed class BottomNavigationBarItems(
 
     data object CustomDice : BottomNavigationBarItems(
         route = AppDestinations.DICE_CUSTOM_ROUTE,
-        title = "Preset Dice",
+        title = "Custom Dice",
         icon =  R.drawable.icon_list
     )
 
