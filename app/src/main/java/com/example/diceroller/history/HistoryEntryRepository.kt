@@ -33,6 +33,7 @@ object HistoryEntryRepositoryImpl : HistoryEntryRepository {
 
     override fun clear() {
         historyList = emptyList()
+        _rollHistoryList.update { historyList }
     }
 
 }
