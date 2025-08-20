@@ -54,7 +54,7 @@ fun HistoryScreenLayout(
         }
 
         // Displays list of rolls if any have been made, otherwise displays message
-        if (uiState.newToOldSortedHistoryList.isEmpty()) {
+        if (uiState.historyList.isEmpty()) {
             Row (
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -69,7 +69,7 @@ fun HistoryScreenLayout(
             LazyColumn(
                 Modifier.fillMaxWidth()
             ) {
-                items(uiState.newToOldSortedHistoryList) { entry ->
+                items(uiState.historyList) { entry ->
                     HistoryItem(entry = entry)
                 }
                 item{

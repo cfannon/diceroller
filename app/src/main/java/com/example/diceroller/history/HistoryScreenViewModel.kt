@@ -1,34 +1,36 @@
 package com.example.diceroller.history
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.diceroller.diceroller.Dice
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 class HistoryScreenViewModel(val repo: HistoryEntryRepository = HistoryEntryRepositoryImpl) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(HistoryUiState())
-    val uiState = _uiState.asStateFlow()
+    private var isReversed = true
 
-    init {
-        getHistory()
-    }
+    val uiState = repo.rollHistoryList.map { entries ->
+        HistoryUiState(historyList = applySort(entries))
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, HistoryUiState())
 
-    private fun getHistory() {
-        _uiState.update { HistoryUiState(repo.getAll()) }
+    private fun applySort(list: List<HistoryEntry>) : List<HistoryEntry> {
+        return if (isReversed) {
+            list.reversed()
+        } else {
+            list
+        }
     }
 
     // Clear all History
     fun onClearHistoryClick() {
         repo.clear()
-        getHistory()
     }
 }
 
 data class HistoryUiState(
-    val historyList: List<HistoryEntry> = emptyList(),
-    val newToOldSortedHistoryList: List<HistoryEntry> = historyList.reversed()
+    val historyList: List<HistoryEntry> = emptyList()
 )
 
 data class HistoryEntry(
