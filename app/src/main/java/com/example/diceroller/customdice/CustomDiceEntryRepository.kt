@@ -1,27 +1,40 @@
 package com.example.diceroller.customdice
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+
 interface CustomDiceEntryRepository {
+
+    val fullCustomDiceList : StateFlow<List<CustomDiceEntry>>
 
     fun saveEntry(entry: CustomDiceEntry)
 
     fun getAll() : List<CustomDiceEntry>
 
-    fun deleteEntry(entry: CustomDiceEntry)
+    fun deleteEntry()
 }
 
 object CustomDiceEntryRepositoryImpl : CustomDiceEntryRepository {
-    private val customDiceList = mutableListOf<CustomDiceEntry>()
+    private var customDiceList = listOf<CustomDiceEntry>()
+    private val _fullCustomDiceList = MutableStateFlow(customDiceList)
+    override val fullCustomDiceList = _fullCustomDiceList.asStateFlow()
 
     override fun saveEntry(entry: CustomDiceEntry) {
-        customDiceList.add(entry)
+        customDiceList += entry
+        _fullCustomDiceList.update { customDiceList }
     }
 
     override fun getAll() : List<CustomDiceEntry> {
         return customDiceList
     }
 
-    override fun deleteEntry(entry: CustomDiceEntry) {
-        TODO("Not yet implemented")
+    //TODO: Implement "Delete specific entry"
+    // TEMP - Currently deletes last entry in list
+    override fun deleteEntry() {
+        customDiceList -= customDiceList.last()
+        _fullCustomDiceList.update { customDiceList }
     }
 
 }

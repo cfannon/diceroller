@@ -65,7 +65,7 @@ fun CustomDiceScreenLayout(
                     painter = painterResource(R.drawable.icon_add),
                     contentDescription = "Add custom dice",
                     modifier = modifier
-                        .clickable { viewModel.onCreateCustomDiceClick() } // TODO: Add click listener
+                        .clickable { viewModel.onCreateCustomDiceClick() }
                         .height(32.dp)
                         .width(32.dp)
                         .padding(2.dp)
@@ -75,8 +75,8 @@ fun CustomDiceScreenLayout(
                 )
             }
 
-            // Displays list of rolls if any have been made, otherwise displays message
-            if (uiState.customDiceList.isEmpty()) {
+            // Displays list of custom rolls if any have been made, otherwise displays message
+            if (uiState.finalCustomDiceList.isEmpty()) {
                 Row(
                     Modifier.fillMaxWidth(),
                 ) {
@@ -90,7 +90,7 @@ fun CustomDiceScreenLayout(
                 LazyColumn(
                     Modifier.fillMaxWidth()
                 ) {
-                    items(uiState.customDiceList) { entry ->
+                    items(uiState.finalCustomDiceList) { entry ->
                         CustomDiceItem(entry = entry)
                     }
                     item {
@@ -115,7 +115,7 @@ fun CustomDiceScreenLayout(
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.secondary,
                                 modifier = modifier
-                                    .clickable { }
+                                    .clickable { viewModel.onDeleteCustomDiceClick() }
                                 //TODO: Click to make items able to be selected and deletable
                             )
                         }

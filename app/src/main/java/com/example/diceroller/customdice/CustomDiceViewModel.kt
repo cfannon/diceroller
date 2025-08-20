@@ -1,29 +1,17 @@
 package com.example.diceroller.customdice
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.diceroller.diceroller.Dice
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
-class CustomDiceScreenViewModel(
-    private val customDiceRepo: CustomDiceEntryRepository = CustomDiceEntryRepositoryImpl) : ViewModel()
-{
+class CustomDiceScreenViewModel(private val customDiceRepo: CustomDiceEntryRepository = CustomDiceEntryRepositoryImpl) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(CustomDiceUiState())
-    val uiState = _uiState.asStateFlow()
-
-    init {
-        getCustomDiceList()
-    }
-
-    private fun getCustomDiceList() {
-        _uiState.update { CustomDiceUiState(customDiceRepo.getAll()) }
-    }
-
-    fun onDeleteCustomDiceClick() {
-
-    }
+    val uiState = customDiceRepo.fullCustomDiceList.map { customDiceEntries ->
+        CustomDiceUiState(customDiceEntries)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, CustomDiceUiState())
 
     // Create custom dice entry
     fun onCreateCustomDiceClick() {
@@ -40,14 +28,16 @@ class CustomDiceScreenViewModel(
     // Temp dice roll function when clicking on custom dice entry
     // Displays "5"
     fun onCustomDiceRollClick() {
-
+        //TODO: Dice roll logic
     }
 
-
+    fun onDeleteCustomDiceClick() {
+        customDiceRepo.deleteEntry()
+    }
 }
 
 class CustomDiceUiState(
-    val customDiceList : List<CustomDiceEntry> = emptyList(),
+    val finalCustomDiceList : List<CustomDiceEntry> = emptyList(),
     val tempFinalResult : String = "0"
 )
 
