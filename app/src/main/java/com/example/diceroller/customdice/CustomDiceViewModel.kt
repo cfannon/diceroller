@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-class CustomDiceScreenViewModel(private val customDiceRepo: CustomDiceEntryRepository = CustomDiceEntryRepositoryImpl) : ViewModel() {
+class CustomDiceScreenViewModel(
+    private val customDiceRepo: CustomDiceEntryRepository = CustomDiceEntryRepositoryImpl,
+) : ViewModel() {
 
     val uiState = customDiceRepo.fullCustomDiceList.map { customDiceEntries ->
         CustomDiceUiState(customDiceEntries)
@@ -25,10 +27,7 @@ class CustomDiceScreenViewModel(private val customDiceRepo: CustomDiceEntryRepos
         )
     }
 
-    // Temp dice roll function when clicking on custom dice entry
-    // Displays "5"
     fun onCustomDiceRollClick() {
-        //TODO: Dice roll logic
     }
 
     fun onDeleteCustomDiceClick() {
@@ -38,7 +37,8 @@ class CustomDiceScreenViewModel(private val customDiceRepo: CustomDiceEntryRepos
 
 class CustomDiceUiState(
     val finalCustomDiceList : List<CustomDiceEntry> = emptyList(),
-    val tempFinalResult : String = "0"
+    val tempFinalResult : String = "15",
+    val tempResultsBreakdown : String = "4 + 6 ( + 5 Modifier)"
 )
 
 data class CustomDiceEntry(
