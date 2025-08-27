@@ -3,6 +3,7 @@ package com.example.diceroller.customdice
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,13 +13,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,13 +34,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.diceroller.R
+import com.example.diceroller.diceroller.DiceSelectionSection
 
 @Composable
 fun CustomDiceScreenLayout(
     modifier: Modifier = Modifier,
     viewModel: CustomDiceScreenViewModel = CustomDiceScreenViewModel()
 ) {
+
+    var showDiceSelectionDialog by remember { mutableStateOf(false) }
+
     Column(
         Modifier
             .fillMaxSize()
@@ -65,7 +77,9 @@ fun CustomDiceScreenLayout(
                     painter = painterResource(R.drawable.icon_add),
                     contentDescription = "Add custom dice",
                     modifier = modifier
-                        .clickable { viewModel.onCreateCustomDiceClick() }
+                        .clickable {
+                            showDiceSelectionDialog = true
+                        }
                         .height(32.dp)
                         .width(32.dp)
                         .padding(2.dp)
@@ -75,7 +89,7 @@ fun CustomDiceScreenLayout(
                 )
             }
 
-            // Displays list of custom rolls if any have been made, otherwise displays message
+            // Displays list of custom dice if any have been made, otherwise displays message
             if (uiState.finalCustomDiceList.isEmpty()) {
                 Row(
                     Modifier.fillMaxWidth(),
@@ -106,7 +120,8 @@ fun CustomDiceScreenLayout(
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.secondary,
                                 modifier = modifier
-                                    .clickable { } //TODO: Click to make items able to be rearranged
+                                    .clickable { }
+                                //TODO: Click to make items able to be rearranged
                             )
 
                             Text(
@@ -127,15 +142,86 @@ fun CustomDiceScreenLayout(
         // Results
         Column() {
             ResultsSection(
-                finalResult = uiState.tempFinalResult
+                finalResult = uiState.tempFinalResult,
+                resultsBreakdown = uiState.tempResultsBreakdown
             )
         }
     }
+
+    DiceSelection(showDiceSelectionDialog)
+
+}
+
+@Composable
+fun DiceSelection(isVisible: Boolean) {
+
+    //Temp variable
+    var customDiceName by remember { mutableStateOf("") }
+
+    if (isVisible)
+        Dialog(
+            onDismissRequest = {  }
+        ) {
+            Card(
+                modifier = Modifier
+                    .width(IntrinsicSize.Min)
+                    .height(IntrinsicSize.Min)
+                    .padding(16.dp),
+                shape = RoundedCornerShape(8.dp),
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        text = "Create a custom dice",
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(16.dp),
+                    )
+
+                    TextField(
+                        value = customDiceName,
+                        onValueChange = { newText -> customDiceName = newText },
+                        label = { Text("Enter a name for the dice roll") },
+                        placeholder = { Text("") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    DiceSelectionSection()
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        TextButton(
+                            onClick = { },
+                            modifier = Modifier.padding(8.dp),
+                        ) {
+                            Text("Cancel")
+                        }
+
+                        TextButton(
+                            onClick = { },
+                            modifier = Modifier.padding(8.dp),
+                        ) {
+                            Text("Save")
+                        }
+                    }
+                }
+            }
+        }
 }
 
 @Composable
 fun CustomDiceItem(
-    entry: CustomDiceEntry
+    entry: CustomDiceEntry,
+    onCustomDiceRollClick: () -> Unit = {}
 ) {
     Card(
         modifier = Modifier
@@ -147,7 +233,7 @@ fun CustomDiceItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { } //TODO: Click to roll custom dice
+                .clickable { onCustomDiceRollClick() } //TODO: Click to roll custom dice
         ) {
             Icon(
                 painter = painterResource(entry.dice.drawableResource),
@@ -164,7 +250,6 @@ fun CustomDiceItem(
 
 @Composable
 fun CustomDiceItemLabel(
-    modifier: Modifier = Modifier,
     entry: CustomDiceEntry
 ) {
     Row(
@@ -192,8 +277,7 @@ fun CustomDiceItemLabel(
 @Composable
 fun ResultsSection(
     finalResult: String,
-//    finalResultColor: Color,
-//    diceRollPlusModifier: String
+    resultsBreakdown: String,
 ) {
     Row (
         Modifier
@@ -207,13 +291,12 @@ fun ResultsSection(
 
             Text(
                 text = finalResult,
-//                color = finalResultColor,
                 fontSize = 88.sp
             )
-//            Text(
-//                text = diceRollPlusModifier,
-//                fontSize = 20.sp
-//            )
+            Text(
+                text = resultsBreakdown,
+                fontSize = 20.sp
+            )
         }
     }
 }
@@ -228,10 +311,16 @@ private fun CustomDiceItemPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun CustomDiceItemLabelPreview() {
-    CustomDiceItemLabel(entry = CustomDiceEntry()
+    CustomDiceItemLabel(
+        entry = CustomDiceEntry()
     )
 }
 
+@Preview(showBackground = true)
+@Composable
+private fun DiceSelectionModalPreview() {
+    DiceSelection(isVisible = true)
+}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
