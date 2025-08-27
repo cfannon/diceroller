@@ -49,22 +49,7 @@ fun DiceRollerScreenLayout(
 
         Subtitle()
 
-        DiceSelection (selectedDice = uiState.diceValue ) { selectedDiceValue ->
-            viewModel.onDiceSelectionClick(selectedDiceValue)
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        ModifierButtons(
-            rollTypeState = uiState.rollType,
-            onRollTypeClick = viewModel::applyRollTypeClick,
-            onDiceQuantityDownClick = viewModel::onDiceQuantityDownClick,
-            onDiceQuantityUpClick = viewModel::onDiceQuantityUpClick,
-            diceQuantity = uiState.diceQuantity,
-            onDiceModifierDownClick = viewModel::onDiceModifierDownClick,
-            onDiceModifierUpClick = viewModel::onDiceModifierUpClick,
-            diceModifierResult = uiState.diceModifierResult,
-        )
+        DiceSelectionSection(viewModel, uiState)
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -117,6 +102,28 @@ fun Subtitle() {
     ) {
         Text(
             text = "Choose your weapon!"
+        )
+    }
+}
+
+@Composable
+fun DiceSelectionSection(viewModel: DiceRollerViewModel, uiState: UiState) {
+    Column() {
+        DiceSelection(selectedDice = uiState.diceValue) { selectedDiceValue ->
+            viewModel.onDiceSelectionClick(selectedDiceValue)
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        ModifierButtons(
+            rollTypeState = uiState.rollType,
+            onRollTypeClick = viewModel::applyRollTypeClick,
+            onDiceQuantityDownClick = viewModel::onDiceQuantityDownClick,
+            onDiceQuantityUpClick = viewModel::onDiceQuantityUpClick,
+            diceQuantity = uiState.diceQuantity,
+            onDiceModifierDownClick = viewModel::onDiceModifierDownClick,
+            onDiceModifierUpClick = viewModel::onDiceModifierUpClick,
+            diceModifierResult = uiState.diceModifierResult,
         )
     }
 }
