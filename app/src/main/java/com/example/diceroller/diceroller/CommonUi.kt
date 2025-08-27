@@ -15,6 +15,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -34,6 +36,12 @@ enum class Dice(val max: Int, val drawableResource: Int, val label: String) {
     D12(12, R.drawable.d12, "d12"),
     D20(20, R.drawable.d20, "d20"),
     D100(100, R.drawable.d10, "d100")
+}
+
+@Composable
+fun DiceSelectionSection(viewModel: DiceRollerViewModel = DiceRollerViewModel()) {
+    val uiState by viewModel.uiState.collectAsState()
+    DiceSelectionSection(viewModel, uiState)
 }
 
 @Composable
