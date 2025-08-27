@@ -59,7 +59,7 @@ fun DiceSelectionSection(viewModel: DiceRollerViewModel, uiState: UiState) {
 }
 
 @Composable
-fun DiceSelection(selectedDice: Dice?, onClick: (Dice) -> Unit) {
+private fun DiceSelection(selectedDice: Dice?, onClick: (Dice) -> Unit) {
     val values = Dice.entries.toTypedArray()
     val middle = values.size / 2
 
@@ -70,7 +70,7 @@ fun DiceSelection(selectedDice: Dice?, onClick: (Dice) -> Unit) {
 }
 
 @Composable
-fun ModifierButtons(
+private fun ModifierButtons(
     modifier: Modifier = Modifier,
     rollTypeState: RollTypeState,
     onRollTypeClick: (RollTypeState) -> Unit,
@@ -189,7 +189,7 @@ fun ModifierButtons(
 }
 
 @Composable
-fun DiceSelectionButton(
+private fun DiceSelectionButton(
     modifier: Modifier = Modifier,
     dice: Dice,
     isSelected: Boolean,
@@ -208,7 +208,7 @@ fun DiceSelectionButton(
 }
 
 @Composable
-fun DiceButtonRow (
+private fun DiceButtonRow (
     start: Int,
     finish: Int,
     selectedDice: Dice?,
@@ -240,7 +240,7 @@ fun DiceButtonRow (
 }
 
 @Composable
-fun RollTypeSelectionButton(
+private fun RollTypeSelectionButton(
     modifier: Modifier = Modifier,
     roll: RollTypeState,
     isSelected: Boolean,
@@ -262,7 +262,7 @@ fun RollTypeSelectionButton(
 }
 
 @Composable
-fun RollTypeRow(
+private fun RollTypeRow(
     selected: RollTypeState,
     onClick: (RollTypeState) -> Unit
 ) {
