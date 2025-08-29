@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.diceroller.diceroller.Dice
 import com.example.diceroller.diceroller.DiceRollerViewController
 import com.example.diceroller.diceroller.DiceRollerViewModel
+import com.example.diceroller.diceroller.RollTypeState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -30,6 +31,7 @@ class CustomDiceScreenViewModel(
             CustomDiceEntry(
                 customDiceName = enteredCustomDiceName,
                 dice = selectedCustomDice ?: Dice.D6,
+                rollType = RollTypeState.Standard,
                 quantity = 2,
                 diceModifier = 5
             )
@@ -58,6 +60,7 @@ class CustomDiceUiState(
 data class CustomDiceEntry(
     val customDiceName : String = "Custom Dice # 1",
     val dice : Dice = Dice.D6,
+    val rollType : RollTypeState = RollTypeState.Standard,
     val quantity : Int = 2,
     val diceModifier : Int = 5
 )
