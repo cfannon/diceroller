@@ -41,7 +41,7 @@ import com.example.diceroller.diceroller.DiceSelectionSection
 @Composable
 fun CustomDiceScreenLayout(
     modifier: Modifier = Modifier,
-    viewModel: CustomDiceScreenViewModel = CustomDiceScreenViewModel()
+    customDiceScreenViewModel: CustomDiceScreenViewModel = CustomDiceScreenViewModel()
 ) {
 
     var showDiceSelectionDialog by remember { mutableStateOf(false) }
@@ -53,7 +53,7 @@ fun CustomDiceScreenLayout(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
-        val uiState by viewModel.uiState.collectAsState()
+        val uiState by customDiceScreenViewModel.uiState.collectAsState()
 
         Column() {
             Row(
@@ -130,7 +130,7 @@ fun CustomDiceScreenLayout(
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.secondary,
                                 modifier = modifier
-                                    .clickable { viewModel.onDeleteCustomDiceClick() }
+                                    .clickable { customDiceScreenViewModel.onDeleteCustomDiceClick() }
                                 //TODO: Click to make items able to be selected and deletable
                             )
                         }
@@ -155,13 +155,9 @@ fun CustomDiceScreenLayout(
 
 @Composable
 fun DiceSelectionDialog(
-//    isVisible: Boolean,
     onDismissDialog: () -> Unit,
-    viewModel: CustomDiceScreenViewModel = CustomDiceScreenViewModel()
+    customDiceScreenViewModel: CustomDiceScreenViewModel = CustomDiceScreenViewModel()
 ) {
-
-    var enteredCustomDiceName by remember { mutableStateOf("") }
-
     Dialog(
         onDismissRequest = { onDismissDialog() }
     ) {
@@ -186,17 +182,11 @@ fun DiceSelectionDialog(
                         .padding(16.dp),
                 )
 
-                TextField(
-                    value = enteredCustomDiceName,
-                    onValueChange = { newText -> enteredCustomDiceName = newText },
-                    label = { Text("Enter a name for the dice roll") },
-                    placeholder = { Text("") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                CustomDiceNameTextField(customDiceScreenViewModel)
 
                 DiceSelectionSection()
 
+                // Cancel and Save buttons
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -216,7 +206,7 @@ fun DiceSelectionDialog(
                     TextButton(
                         onClick = {
                             onDismissDialog()
-                            viewModel.onSaveCustomDiceClick()
+                            customDiceScreenViewModel.onSaveCustomDiceClick()
                         },
                         modifier = Modifier.padding(8.dp),
                     ) {
@@ -226,6 +216,20 @@ fun DiceSelectionDialog(
             }
         }
     }
+}
+
+@Composable
+fun CustomDiceNameTextField(customDiceScreenViewModel: CustomDiceScreenViewModel) {
+    TextField(
+        value = customDiceScreenViewModel.enteredCustomDiceName,
+        onValueChange = {
+            newNameText -> customDiceScreenViewModel.enteredCustomDiceName = newNameText
+                        },
+        label = { Text("Enter a name for the dice roll") },
+        placeholder = { Text("") },
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable

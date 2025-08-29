@@ -1,5 +1,8 @@
 package com.example.diceroller.customdice
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.diceroller.diceroller.Dice
@@ -8,18 +11,20 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 class CustomDiceScreenViewModel(
-    private val customDiceRepo: CustomDiceEntryRepository = CustomDiceEntryRepositoryImpl,
+    private val customDiceRepo: CustomDiceEntryRepository = CustomDiceEntryRepositoryImpl
 ) : ViewModel() {
+
+    var enteredCustomDiceName : String by mutableStateOf("")
 
     val uiState = customDiceRepo.fullCustomDiceList.map { customDiceEntries ->
         CustomDiceUiState(customDiceEntries)
     }.stateIn(viewModelScope, SharingStarted.Eagerly, CustomDiceUiState())
 
-    // Create custom dice entry
-    fun onCreateCustomDiceClick() {
+    // Save to create a custom dice entry
+    fun onSaveCustomDiceClick() {
         customDiceRepo.saveEntry(
             CustomDiceEntry(
-                customDiceName = "Custom Dice # 1",
+                customDiceName = enteredCustomDiceName,
                 dice = Dice.D6,
                 quantity = 2,
                 diceModifier = 5
