@@ -53,7 +53,7 @@ fun CustomDiceScreenLayout(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
-        val uiState by customDiceScreenViewModel.uiState.collectAsState()
+        val uiState by customDiceScreenViewModel.customDiceUIState.collectAsState()
 
         Column() {
             Row(
