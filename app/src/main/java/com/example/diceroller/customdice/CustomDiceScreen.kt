@@ -148,74 +148,84 @@ fun CustomDiceScreenLayout(
         }
     }
 
-    DiceSelection(showDiceSelectionDialog)
-
+    if (showDiceSelectionDialog) {
+        DiceSelectionDialog(onDismissDialog = { showDiceSelectionDialog = false })
+    }
 }
 
 @Composable
-fun DiceSelection(isVisible: Boolean) {
+fun DiceSelectionDialog(
+//    isVisible: Boolean,
+    onDismissDialog: () -> Unit,
+    viewModel: CustomDiceScreenViewModel = CustomDiceScreenViewModel()
+) {
 
-    //Temp variable
-    var customDiceName by remember { mutableStateOf("") }
+    var enteredCustomDiceName by remember { mutableStateOf("") }
 
-    if (isVisible)
-        Dialog(
-            onDismissRequest = {  }
+    Dialog(
+        onDismissRequest = { onDismissDialog() }
+    ) {
+        Card(
+            modifier = Modifier
+                .width(IntrinsicSize.Min)
+                .height(IntrinsicSize.Min)
+                .padding(16.dp),
+            shape = RoundedCornerShape(8.dp),
         ) {
-            Card(
+            Column(
                 modifier = Modifier
-                    .width(IntrinsicSize.Min)
-                    .height(IntrinsicSize.Min)
-                    .padding(16.dp),
-                shape = RoundedCornerShape(8.dp),
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Column(
+                Text(
+                    text = "Create a custom dice",
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                        .padding(16.dp),
+                )
+
+                TextField(
+                    value = enteredCustomDiceName,
+                    onValueChange = { newText -> enteredCustomDiceName = newText },
+                    label = { Text("Enter a name for the dice roll") },
+                    placeholder = { Text("") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                DiceSelectionSection()
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
                 ) {
-                    Text(
-                        text = "Create a custom dice",
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .padding(16.dp),
-                    )
-
-                    TextField(
-                        value = customDiceName,
-                        onValueChange = { newText -> customDiceName = newText },
-                        label = { Text("Enter a name for the dice roll") },
-                        placeholder = { Text("") },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    DiceSelectionSection()
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
+                    // Cancel button
+                    TextButton(
+                        onClick = {
+                            onDismissDialog()
+                        },
+                        modifier = Modifier.padding(8.dp),
                     ) {
-                        TextButton(
-                            onClick = { },
-                            modifier = Modifier.padding(8.dp),
-                        ) {
-                            Text("Cancel")
-                        }
+                        Text("Cancel")
+                    }
 
-                        TextButton(
-                            onClick = { },
-                            modifier = Modifier.padding(8.dp),
-                        ) {
-                            Text("Save")
-                        }
+                    // Save button
+                    TextButton(
+                        onClick = {
+                            onDismissDialog()
+                            viewModel.onSaveCustomDiceClick()
+                        },
+                        modifier = Modifier.padding(8.dp),
+                    ) {
+                        Text("Save")
                     }
                 }
             }
         }
+    }
 }
 
 @Composable
@@ -227,7 +237,7 @@ fun CustomDiceItem(
         modifier = Modifier
             .height(56.dp)
             .padding(4.dp),
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -316,11 +326,11 @@ private fun CustomDiceItemLabelPreview() {
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun DiceSelectionModalPreview() {
-    DiceSelection(isVisible = true)
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun DiceSelectionModalPreview() {
+//    DiceSelectionDialog(false)
+//}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
