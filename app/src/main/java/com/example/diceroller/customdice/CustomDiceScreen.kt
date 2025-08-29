@@ -184,7 +184,7 @@ fun DiceSelectionDialog(
 
                 CustomDiceNameTextField(customDiceScreenViewModel)
 
-                DiceSelectionSection()
+                DiceSelectionSection(customDiceScreenViewModel)
 
                 // Cancel and Save buttons
                 Row(
