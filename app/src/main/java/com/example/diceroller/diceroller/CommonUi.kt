@@ -39,13 +39,13 @@ enum class Dice(val max: Int, val drawableResource: Int, val label: String) {
 }
 
 @Composable
-fun DiceSelectionSection(viewModel: DiceRollerViewModel = DiceRollerViewModel()) {
+fun DiceSelectionSection(viewModel: DiceRollerViewController = DiceRollerViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     DiceSelectionSection(viewModel, uiState)
 }
 
 @Composable
-fun DiceSelectionSection(viewModel: DiceRollerViewModel, uiState: UiState) {
+fun DiceSelectionSection(viewModel: DiceRollerViewController, uiState: UiState) {
     Column() {
         DiceSelection(selectedDice = uiState.diceValue) { selectedDiceValue ->
             viewModel.onDiceSelectionClick(selectedDiceValue)

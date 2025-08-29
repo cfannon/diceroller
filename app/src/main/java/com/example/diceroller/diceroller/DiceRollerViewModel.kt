@@ -33,10 +33,12 @@ enum class RollTypeState(val drawableResource: Int, val label: String) {
 
 private const val AdvantageDiceQuantity = 2
 
-class DiceRollerViewModel(val repo: HistoryEntryRepository = HistoryEntryRepositoryImpl) : ViewModel() {
+class DiceRollerViewModel(
+    private val repo: HistoryEntryRepository = HistoryEntryRepositoryImpl
+) : ViewModel(), DiceRollerViewController {
 
     private val _uiState = MutableStateFlow(UiState())
-    val uiState = _uiState.asStateFlow()
+    override val uiState = _uiState.asStateFlow()
 
     private val generator = TestNumberGenerator()
 
@@ -45,13 +47,13 @@ class DiceRollerViewModel(val repo: HistoryEntryRepository = HistoryEntryReposit
 
     private var resultsBreakdown = ""
 
-    fun onDiceSelectionClick(selectedDice: Dice) {
+    override fun onDiceSelectionClick(selectedDice: Dice) {
         _uiState.update {
             it.copy(diceValue = selectedDice)
         }
     }
 
-    fun onDiceRollClick() = _uiState.update { currentState ->
+    override fun onDiceRollClick() = _uiState.update { currentState ->
         resultsBreakdown = ""
 
         if (currentState.diceValue == null) {
@@ -159,7 +161,7 @@ class DiceRollerViewModel(val repo: HistoryEntryRepository = HistoryEntryReposit
         }
     }
 
-    fun applyRollTypeClick(rollState: RollTypeState) = _uiState.update {
+    override fun applyRollTypeClick(rollState: RollTypeState) = _uiState.update {
         when (rollState) {
             RollTypeState.Advantage -> {
                 onDiceSelectionClick(Dice.D20)
@@ -186,7 +188,7 @@ class DiceRollerViewModel(val repo: HistoryEntryRepository = HistoryEntryReposit
         }
     }
 
-    fun onDiceQuantityDownClick() = _uiState.update { currentState ->
+    override fun onDiceQuantityDownClick() = _uiState.update { currentState ->
         val diceQuantityCurrent = currentState.diceQuantity
         val diceQuantityUpdate = if (diceQuantityCurrent > 1) diceQuantityCurrent-1 else 1
         if (currentState.rollType == RollTypeState.Standard) {
@@ -194,13 +196,13 @@ class DiceRollerViewModel(val repo: HistoryEntryRepository = HistoryEntryReposit
         } else currentState
     }
 
-    fun onDiceQuantityUpClick() = _uiState.update { currentState ->
+    override fun onDiceQuantityUpClick() = _uiState.update { currentState ->
         if (currentState.rollType == RollTypeState.Standard) {
             currentState.copy(diceQuantity = currentState.diceQuantity + 1)
         } else currentState
     }
 
-    fun onDiceModifierDownClick() {
+    override fun onDiceModifierDownClick() {
         _uiState.update {
             val diceModifierUpdate = it.diceModifier-1
             val diceModifierResultUpdate =
@@ -216,7 +218,7 @@ class DiceRollerViewModel(val repo: HistoryEntryRepository = HistoryEntryReposit
         }
     }
 
-    fun onDiceModifierUpClick() {
+    override fun onDiceModifierUpClick() {
         _uiState.update {
             val diceModifierUpdate = it.diceModifier+1
             val diceModifierResultUpdate =
@@ -232,7 +234,7 @@ class DiceRollerViewModel(val repo: HistoryEntryRepository = HistoryEntryReposit
         }
     }
 
-    fun onResetClick() {
+    override fun onResetClick() {
         _uiState.update { UiState() }
         resultsBreakdown = ""
     }
