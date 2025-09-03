@@ -20,6 +20,12 @@ class CustomDiceScreenViewModel(
 
     var enteredCustomDiceName : String by mutableStateOf("")
     private var selectedCustomDice : Dice? = null
+    private var customDiceRollType : RollTypeState = RollTypeState.Standard
+    private val customDiceQuantity
+        get() = uiState.value.diceQuantity
+    private val customDiceModifier
+        get() = uiState.value.diceModifier
+
 
     val customDiceUIState = customDiceRepo.fullCustomDiceList.map { customDiceEntries ->
         CustomDiceUiState(customDiceEntries)
@@ -31,9 +37,9 @@ class CustomDiceScreenViewModel(
             CustomDiceEntry(
                 customDiceName = enteredCustomDiceName,
                 dice = selectedCustomDice ?: Dice.D6,
-                rollType = RollTypeState.Standard,
-                quantity = 2,
-                diceModifier = 5
+                rollType = customDiceRollType,
+                quantity = customDiceQuantity,
+                diceModifier = customDiceModifier
             )
         )
     }
@@ -41,6 +47,11 @@ class CustomDiceScreenViewModel(
     override fun onDiceSelectionClick(selectedDice: Dice) {
         selectedCustomDice = selectedDice
         diceRollerViewModel.onDiceSelectionClick(selectedDice)
+    }
+
+    override fun applyRollTypeClick(rollState: RollTypeState) {
+        customDiceRollType = rollState
+        diceRollerViewModel.applyRollTypeClick(rollState)
     }
 
     fun onCustomDiceRollClick() {
