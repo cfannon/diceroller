@@ -54,6 +54,7 @@ fun CustomDiceScreenLayout(
     ) {
 
         val uiState by viewModel.customDiceUIState.collectAsState()
+        val customDiceList by viewModel.customDiceList.collectAsState()
 
         Column() {
             Row(
@@ -90,7 +91,7 @@ fun CustomDiceScreenLayout(
             }
 
             // Displays list of custom dice if any have been made, otherwise displays message
-            if (uiState.finalCustomDiceList.isEmpty()) {
+            if (customDiceList.isEmpty()) {
                 Row(
                     Modifier.fillMaxWidth(),
                 ) {
@@ -104,8 +105,11 @@ fun CustomDiceScreenLayout(
                 LazyColumn(
                     Modifier.fillMaxWidth()
                 ) {
-                    items(uiState.finalCustomDiceList) { entry ->
-                        CustomDiceItem(entry = entry)
+                    items(customDiceList) { entry ->
+                        CustomDiceItem(entry = entry, onCustomDiceRollClick = {
+                            viewModel.onCustomDiceRollClick(entry)
+                        })
+
                     }
                     item {
                         Row(
@@ -142,8 +146,8 @@ fun CustomDiceScreenLayout(
         // Results
         Column() {
             ResultsSection(
-                finalResult = uiState.tempFinalResult,
-                resultsBreakdown = uiState.tempResultsBreakdown
+                finalResult = uiState.customDiceFinalResult,
+                resultsBreakdown = uiState.customDiceResultsBreakdown
             )
         }
     }
@@ -235,7 +239,7 @@ fun CustomDiceNameTextField(viewModel: CustomDiceScreenViewModel) {
 @Composable
 fun CustomDiceItem(
     entry: CustomDiceEntry,
-    onCustomDiceRollClick: () -> Unit = {}
+    onCustomDiceRollClick: (CustomDiceEntry) -> Unit = {}
 ) {
     Card(
         modifier = Modifier
@@ -247,7 +251,7 @@ fun CustomDiceItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onCustomDiceRollClick() } //TODO: Click to roll custom dice
+                .clickable { onCustomDiceRollClick(entry) } //TODO: Click to roll custom dice
         ) {
             Icon(
                 painter = painterResource(entry.dice.drawableResource),
