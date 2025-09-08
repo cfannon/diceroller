@@ -24,6 +24,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.diceroller.customdice.CustomDiceScreenLayout
+import com.example.diceroller.customdice.CustomDiceScreenViewModel
 import com.example.diceroller.diceroller.DiceRollerScreenLayout
 import com.example.diceroller.diceroller.DiceRollerViewModel
 import com.example.diceroller.history.HistoryScreenLayout
@@ -54,6 +56,7 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation() {
     val navController: NavHostController = rememberNavController()
     val diceRollerViewModel: DiceRollerViewModel = viewModel()
+    val customDiceScreenViewModel: CustomDiceScreenViewModel = viewModel()
     val historyScreenViewModel: HistoryScreenViewModel = viewModel()
     val settingsScreenViewModel: SettingsScreenViewModel = viewModel()
 
@@ -70,6 +73,11 @@ fun AppNavigation() {
             composable(AppDestinations.DICE_ROLLER_ROUTE) {
                 DiceRollerScreenLayout(
                     viewModel = diceRollerViewModel
+                )
+            }
+            composable(AppDestinations.DICE_CUSTOM_ROUTE) {
+                CustomDiceScreenLayout(
+                    viewModel = customDiceScreenViewModel
                 )
             }
             composable(AppDestinations.HISTORY_ROUTE) {

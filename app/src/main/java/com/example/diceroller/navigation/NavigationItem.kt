@@ -15,6 +15,12 @@ sealed class BottomNavigationBarItems(
         icon =  R.drawable.icon_dice
     )
 
+    data object CustomDice : BottomNavigationBarItems(
+        route = AppDestinations.DICE_CUSTOM_ROUTE,
+        title = "Custom Dice",
+        icon =  R.drawable.icon_list
+    )
+
     data object History : BottomNavigationBarItems(
         route = AppDestinations.HISTORY_ROUTE,
         title = "History",
@@ -30,6 +36,7 @@ sealed class BottomNavigationBarItems(
 
 val bottomNavigationItems = listOf(
     BottomNavigationBarItems.DiceRoller,
+    BottomNavigationBarItems.CustomDice,
     BottomNavigationBarItems.History,
     BottomNavigationBarItems.Settings
 )
