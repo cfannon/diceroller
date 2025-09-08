@@ -8,10 +8,10 @@ import com.example.diceroller.diceroller.Dice
 import com.example.diceroller.diceroller.DiceRollerViewController
 import com.example.diceroller.diceroller.DiceRollerViewModel
 import com.example.diceroller.diceroller.RollTypeState
-import com.example.diceroller.diceroller.TestNumberGenerator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.math.abs
 
 class CustomDiceScreenViewModel(
     private val customDiceRepo: CustomDiceEntryRepository = CustomDiceEntryRepositoryImpl,
@@ -38,8 +38,30 @@ class CustomDiceScreenViewModel(
     }
 
     fun onCustomDiceRollClick(entry: CustomDiceEntry) = _customDiceUIState.update {
+        diceRollerViewModel.onResetClick()
+        diceRollerViewModel.onDiceSelectionClick(entry.dice)
+        diceRollerViewModel.applyRollTypeClick(entry.rollType)
+
+        for ( i in 1 until entry.quantity) {
+            diceRollerViewModel.onDiceQuantityUpClick()
+        }
+
+        val setDiceModifier = entry.diceModifier
+        if (setDiceModifier < 0) {
+            for (i in 1..abs(setDiceModifier)) {
+                diceRollerViewModel.onDiceModifierDownClick()
+            }
+        } else {
+            for (i in 1..setDiceModifier) {
+                diceRollerViewModel.onDiceModifierUpClick()
+            }
+        }
+
+        diceRollerViewModel.onDiceRollClick()
+
         CustomDiceUiState(
-            customDiceFinalResult = TestNumberGenerator().rollDice(entry.dice.max).toString()
+            customDiceFinalResult = diceRollerViewModel.uiState.value.finalResult,
+            customDiceResultsBreakdown = diceRollerViewModel.uiState.value.finalResultsBreakdown
         )
     }
 
