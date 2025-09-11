@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -35,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.example.diceroller.R
 import com.example.diceroller.diceroller.DiceSelectionSection
 
@@ -162,14 +164,18 @@ fun DiceSelectionDialog(
     onDismissDialog: () -> Unit,
     viewModel: CustomDiceScreenViewModel = CustomDiceScreenViewModel()
 ) {
+    val screenConfiguration = LocalConfiguration.current
+    val screenWidth = screenConfiguration.screenWidthDp.dp
+
     Dialog(
-        onDismissRequest = { onDismissDialog() }
+        onDismissRequest = { onDismissDialog() },
+        properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Card(
             modifier = Modifier
-                .width(IntrinsicSize.Min)
+                .fillMaxWidth(.9f)
                 .height(IntrinsicSize.Min)
-                .padding(16.dp),
+                .padding(8.dp),
             shape = RoundedCornerShape(8.dp),
         ) {
             Column(
@@ -299,7 +305,8 @@ fun ResultsSection(
 ) {
     Row (
         Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(8.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Column(
@@ -334,11 +341,11 @@ private fun CustomDiceItemLabelPreview() {
     )
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//private fun DiceSelectionModalPreview() {
-//    DiceSelectionDialog(false)
-//}
+@Preview(showBackground = true)
+@Composable
+private fun DiceSelectionDialogPreview() {
+    DiceSelectionDialog(onDismissDialog = {})
+}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

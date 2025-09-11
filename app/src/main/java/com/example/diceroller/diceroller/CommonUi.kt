@@ -3,8 +3,11 @@ package com.example.diceroller.diceroller
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -53,7 +56,7 @@ fun DiceSelectionSection(viewModel: DiceRollerViewController, uiState: UiState) 
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        ModifierButtons(
+        ModifierButtonsFlowRow(
             rollTypeState = uiState.rollType,
             onRollTypeClick = viewModel::applyRollTypeClick,
             onDiceQuantityDownClick = viewModel::onDiceQuantityDownClick,
@@ -77,26 +80,24 @@ private fun DiceSelection(selectedDice: Dice?, onClick: (Dice) -> Unit) {
     DiceButtonRow(start = middle, finish = values.size, selectedDice = selectedDice ,onClick = onClick)
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ModifierButtons(
+private fun ModifierButtonsFlowRow(
     modifier: Modifier = Modifier,
-    rollTypeState: RollTypeState,
-    onRollTypeClick: (RollTypeState) -> Unit,
-    onDiceQuantityDownClick: () -> Unit,
-    onDiceQuantityUpClick: () -> Unit,
-    diceQuantity: Int,
-    onDiceModifierDownClick: () -> Unit,
-    onDiceModifierUpClick: () -> Unit,
-    diceModifierResult: String,
-) {
-
-    Row(
-        Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-
-    ){
+    rollTypeState: RollTypeState = RollTypeState.Standard,
+    onRollTypeClick: (RollTypeState) -> Unit = {},
+    onDiceQuantityDownClick: () -> Unit = {},
+    onDiceQuantityUpClick: () -> Unit = {},
+    diceQuantity: Int = 1,
+    onDiceModifierDownClick: () -> Unit = {},
+    onDiceModifierUpClick: () -> Unit = {},
+    diceModifierResult: String = "+ 0",
+){
+    FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        maxItemsInEachRow = 3
+    ) {
         // Roll Type Card
         Card(
             shape = RectangleShape,
@@ -106,8 +107,6 @@ private fun ModifierButtons(
         ) {
             RollTypeRow(selected = rollTypeState, onClick = onRollTypeClick)
         }
-
-        Spacer(modifier = Modifier.width(8.dp))
 
         // Dice Quantity Card
         // - Should not be able to go below 1 dice
@@ -120,23 +119,25 @@ private fun ModifierButtons(
             Row(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Icon(
                     painter = painterResource(R.drawable.icon_subtractbox),
                     contentDescription = "Subtract dice",
                     modifier = modifier
                         .clickable { onDiceQuantityDownClick() }
-                        .height(36.dp)
-                        .width(36.dp)
+                        .defaultMinSize(24.dp)
+                        .weight(1f)
                         .padding(2.dp)
                 )
 
                 Text(
                     text = "${diceQuantity}d",
-                    Modifier
-                        .width(40.dp),
+                    modifier = modifier
+                        .defaultMinSize(24.dp)
+                        .weight(1f),
                     textAlign = TextAlign.Center,
+                    maxLines = 1,
                 )
 
                 Icon(
@@ -144,14 +145,12 @@ private fun ModifierButtons(
                     contentDescription = "Add dice",
                     modifier = modifier
                         .clickable { onDiceQuantityUpClick() }
-                        .height(36.dp)
-                        .width(36.dp)
+                        .defaultMinSize(24.dp)
+                        .weight(1f)
                         .padding(2.dp)
                 )
             }
         }
-
-        Spacer(modifier = Modifier.width(8.dp))
 
         // Dice Modifier Card
         Card(
@@ -163,23 +162,25 @@ private fun ModifierButtons(
             Row(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Icon(
                     painter = painterResource(R.drawable.icon_subtractbox),
                     contentDescription = "Subtract modifier",
                     modifier = modifier
                         .clickable { onDiceModifierDownClick() }
-                        .height(36.dp)
-                        .width(36.dp)
+                        .defaultMinSize(24.dp)
+                        .weight(1f)
                         .padding(2.dp)
                 )
 
                 Text(
                     text = diceModifierResult,
-                    Modifier
-                        .width(40.dp),
+                    modifier = modifier
+                        .defaultMinSize(24.dp)
+                        .weight(1f),
                     textAlign = TextAlign.Center,
+                    maxLines = 1,
                 )
 
                 Icon(
@@ -187,8 +188,8 @@ private fun ModifierButtons(
                     contentDescription = "Add modifier",
                     modifier = modifier
                         .clickable { onDiceModifierUpClick() }
-                        .height(36.dp)
-                        .width(36.dp)
+                        .defaultMinSize(24.dp)
+                        .weight(1f)
                         .padding(2.dp)
                 )
             }
@@ -263,8 +264,7 @@ private fun RollTypeSelectionButton(
         tint = if (isSelected) selectedColor else unselectedColor,
         modifier = modifier
             .clickable { onClick(roll) }
-            .height(32.dp)
-            .width(32.dp)
+            .defaultMinSize(24.dp)
             .padding(2.dp)
     )
 }
@@ -279,7 +279,7 @@ private fun RollTypeRow(
     Row(
         modifier = Modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         for (i in rollTypes.indices){
             val rollTypeValue = rollTypes[i]
@@ -297,5 +297,13 @@ fun DiceSelectionPreview() {
     DiceRollerTheme {
         DiceSelectionButton(Modifier, Dice.D20, false) {
         }
+    }
+}
+
+@Preview
+@Composable
+fun ModifierFlowRowPreview() {
+    DiceRollerTheme {
+        ModifierButtonsFlowRow()
     }
 }
