@@ -4,3 +4,7 @@
 /deploymentTargetSelector.xml
 /studiobot.xml
 /vcs.xml
+/compiler.xml
+/gradle.xml
+/kotlinc.xml
+/misc.xml
