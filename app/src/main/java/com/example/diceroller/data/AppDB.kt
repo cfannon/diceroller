@@ -12,7 +12,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.diceroller.diceroller.Dice
 import com.example.diceroller.diceroller.RollTypeState
-import kotlinx.coroutines.flow.Flow
 
 @Database(entities = [CustomDiceEntity::class], version = 1)
 abstract class AppDB : RoomDatabase() {
@@ -37,7 +36,7 @@ abstract class AppDB : RoomDatabase() {
 
 @Entity(tableName = "custom_dice", primaryKeys = ["id"])
 data class CustomDiceEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int?,
     val customDiceName : String,
     val dice : Dice,
     val rollType : RollTypeState,
@@ -48,13 +47,11 @@ data class CustomDiceEntity(
 @Dao
 interface CustomDiceDao {
     @Insert
-    suspend fun insert(customDiceEntity: CustomDiceEntity)
+    fun insert(customDiceEntity: CustomDiceEntity)
 
     @Delete
-    suspend fun delete(customDiceEntity: CustomDiceEntity)
+    fun delete(customDiceEntity: CustomDiceEntity)
 
     @Query("SELECT * FROM custom_dice")
-    suspend fun getAll() : Flow<List<CustomDiceEntity>>
+    fun getAll() : List<CustomDiceEntity>
 }
-
-
