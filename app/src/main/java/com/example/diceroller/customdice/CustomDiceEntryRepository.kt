@@ -42,23 +42,28 @@ object CustomDiceEntryRepositoryImpl : CustomDiceEntryRepository {
 }
 
 // On Device/Local Storage Implementation
-class LocalCustomDiceEntryRepository(private val diceApp : DiceRollerApplication) : CustomDiceEntryRepository {
+class LocalCustomDiceEntryRepository() : CustomDiceEntryRepository {
 
-    private val customDiceDao = diceApp.db.customDiceDao()
+    private var diceApp : DiceRollerApplication? = null
+    private val customDiceDao get() =  diceApp?.db?.customDiceDao()
     private val _fullCustomDiceList = MutableStateFlow(getAll())
     override val fullCustomDiceList = _fullCustomDiceList.asStateFlow()
 
+    fun initialize(diceApp: DiceRollerApplication) {
+        this.diceApp = diceApp
+    }
+
     override fun saveEntry(entry: CustomDiceEntry) {
-        customDiceDao.insert(entry.toCustomDiceEntity())
+        customDiceDao?.insert(entry.toCustomDiceEntity())
         _fullCustomDiceList.update { getAll() }
     }
 
     override fun getAll(): List<CustomDiceEntry> {
-        return customDiceDao.getAll().map { it.toCustomDiceEntry() }
+        return customDiceDao?.getAll()?.map { it.toCustomDiceEntry() } ?: listOf()
     }
 
     override fun deleteEntry() {
-        customDiceDao.delete(customDiceDao.getAll().last())
+        customDiceDao?.delete(customDiceDao!!.getAll().last())
         _fullCustomDiceList.update { getAll() }
     }
 
